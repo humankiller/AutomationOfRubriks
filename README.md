@@ -1,0 +1,2 @@
+# AutomationOfRubriks
+capstone project
