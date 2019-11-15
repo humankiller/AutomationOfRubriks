@@ -9,6 +9,7 @@ import java.util.*;
 import com.example.demo.Model.Question;
 import com.example.demo.Model.SurveyQuestions;
 
+@CrossOrigin(origins = { "http://localhost:3000" })
 @RestController
 public class HomePage {
 	
