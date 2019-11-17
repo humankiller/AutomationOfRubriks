@@ -46,7 +46,7 @@ public class Question {
 		this.question = ques;
 	}
 	
-	public void setQuestionSocre(int quesScore) {
+	public void setQuestionScore(int quesScore) {
 		this.questionScore = quesScore;
 	}
 	

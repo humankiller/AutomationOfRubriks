@@ -39,4 +39,22 @@ public class SurveyQuestions {
 	public List<Question> findAll() {
 		return questions;
 	}
+	
+	public void saveScores(List<Integer> questionScores) {
+		for(int i = 0; i < questionScores.size(); i++) {
+			questions.get(i).setQuestionScore(questionScores.get(i));
+		}
+	}
+	
+	public int calculateScore() {
+		int finalScore = 0;
+		
+		for(int i = 0; i < questions.size(); i++) {
+			finalScore += questions.get(i).getQuestionScore();
+		}
+		
+		return finalScore;
+	}
+	
+	
 }
