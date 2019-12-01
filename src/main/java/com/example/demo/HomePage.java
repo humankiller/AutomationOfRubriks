@@ -11,7 +11,7 @@ import java.util.*;
 import com.example.demo.Model.Question;
 import com.example.demo.Model.SurveyQuestions;
 
-@CrossOrigin(origins = "https://automation-of-rubriks.herokuapp.com/")
+@CrossOrigin(origins = "https://automation-of-rubriks.herokuapp.com")
 @RestController
 public class HomePage {
 	
