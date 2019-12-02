@@ -23,7 +23,13 @@ public class SurveyQuestions {
 	
 	private static int totalScore;
 	
-	private static int questionCount = 0;
+	public void surveyQuestions() {
+		
+	}
+	
+	public SurveyQuestions(Survey survey, List<Question> questions, int questionNumber, int totalScore) {
+		
+	}
 	
 	// This is a method to test API exposure
 	static {
@@ -48,9 +54,14 @@ public class SurveyQuestions {
 		questions.add(new Question(fivePointType, "The team confronts challenges impacting the team", -1));
 	}
 	
+	
+	
 	// test comment
-	public List<Question> findAll() {
-		return questions;
+	public SurveyQuestions findAll() {
+		
+		SurveyQuestions surveyQuestionsToReturn = new SurveyQuestions(survey, questions, questions.size(), 0);
+		
+		return surveyQuestionsToReturn;
 	}
 	
 	public void saveScores(List<Integer> questionScores) {

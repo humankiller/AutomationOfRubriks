@@ -19,7 +19,7 @@ public class HomePage {
 	private SurveyQuestions surveyManageService;
 	
 	@GetMapping("/survey")
-	public List<Question> getAllQuestions() {
+	public SurveyQuestions surveyQuestionsToReturn() {
 		return surveyManageService.findAll();
 	}
 	
