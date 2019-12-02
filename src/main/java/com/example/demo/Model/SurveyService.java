@@ -27,6 +27,8 @@ public class SurveyService {
 	
 	private int totalScore;
 	
+	private Team team1 = new Team();
+	
 	private SurveyQuestions surveyQuestionsToReturn = new SurveyQuestions();
 	
 	{
@@ -51,12 +53,16 @@ public class SurveyService {
 		questions.add(new Question(fivePointType, "The team has fun", -1));
 		questions.add(new Question(fivePointType, "The team confronts challenges impacting the team", -1));
 		
-		
-		
 		surveyQuestionsToReturn.setSurvey(survey);
 		surveyQuestionsToReturn.setQuestions(questions);
 		surveyQuestionsToReturn.setQuestionNumber(questions.size());
 		surveyQuestionsToReturn.setTotalScore(0);
+		
+		
+		List<SurveyQuestions> surveysToPopulateTeam = new ArrayList<>();
+		surveysToPopulateTeam.add(surveyQuestionsToReturn);
+		team1.setSurveys(surveysToPopulateTeam);
+		team1.setTeamName("Team 1");
 		
 		
 		//surveyQuestionsToReturn = new SurveyQuestions(survey, questions, questions.size(), 0);
@@ -71,6 +77,12 @@ public class SurveyService {
 	public SurveyQuestions findAll() {
 		
 		return surveyQuestionsToReturn;
+	}
+	
+	public Team findAllTeams() {
+		
+		return team1;
+		
 	}
 	
 	public void saveScores(List<Integer> questionScores) {

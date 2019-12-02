@@ -22,6 +22,11 @@ public class HomePage {
 		return surveyManageService.findAll();
 	}
 	
+	@GetMapping("/teams")
+	public Team teamsToReturn() {
+		return surveyManageService.findAllTeams();
+	}
+	
 	@PutMapping("/results")
 	public ResponseEntity<Integer[]> setScores(@RequestBody Integer[] questionScores) {
 		
