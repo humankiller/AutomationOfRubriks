@@ -23,17 +23,10 @@ public class SurveyQuestions {
 	
 	private static int totalScore;
 	
-	public void surveyQuestions() {
-		
-	}
+	private static SurveyQuestions surveyQuestionsToReturn;
 	
-	public SurveyQuestions(Survey survey, List<Question> questions, int questionNumber, int totalScore) {
-		
-	}
-	
-	// This is a method to test API exposure
 	static {
-		
+	
 		SurveyType developerSurvey = new SurveyType("Developer", "A survey for the developer");
 		survey = new Survey(developerSurvey, "Pre-Dojo Survey");
 		
@@ -52,14 +45,25 @@ public class SurveyQuestions {
 		questions.add(new Question(fivePointType, "The team has open communications", -1));
 		questions.add(new Question(fivePointType, "The team has fun", -1));
 		questions.add(new Question(fivePointType, "The team confronts challenges impacting the team", -1));
+		
+		surveyQuestionsToReturn = new SurveyQuestions(survey, questions, questions.size(), 0);
+	
 	}
+	
+	public SurveyQuestions() {
+		
+	}
+	
+	public SurveyQuestions(Survey survey, List<Question> questions, int questionNumber, int totalScore) {
+		
+	}
+	
+	// This is a method to test API exposure
 	
 	
 	
 	// test comment
 	public SurveyQuestions findAll() {
-		
-		SurveyQuestions surveyQuestionsToReturn = new SurveyQuestions(survey, questions, questions.size(), 0);
 		
 		return surveyQuestionsToReturn;
 	}

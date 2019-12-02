@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+@JsonSerialize
 public class SurveyType {
 	
 	private String name;
