@@ -8,15 +8,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
-import com.example.demo.Model.Question;
-import com.example.demo.Model.SurveyQuestions;
+import com.example.demo.Model.*;
 
 @CrossOrigin(origins = "https://automation-of-rubriks.herokuapp.com")
 @RestController
 public class HomePage {
 	
 	@Autowired
-	private SurveyQuestions surveyManageService;
+	private SurveyService surveyManageService;
 	
 	@GetMapping("/survey")
 	public SurveyQuestions surveyQuestionsToReturn() {
