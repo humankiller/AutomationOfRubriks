@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @JsonSerialize
 public class Question {
 	
-	private int questionNumber; // This is the question #
+	private QuestionType typeOfQuestion; // This is the type of question that the question is (i.e. 5 point type)
 	private String question; // This is the actual question
 	private int questionScore; // This is the score that the user gives for that question(Default value will be -1)
 	
@@ -18,16 +18,13 @@ public class Question {
 	}
 	
 	// Need an overloaded constructor to set elements
-	public Question(int quesNum, String ques, int quesScore) {
-		this.questionNumber = quesNum;
+	public Question(QuestionType typeOfQuestion, String ques, int quesScore) {
+		this.typeOfQuestion = typeOfQuestion;
 		this.question = ques;
 		this.questionScore = quesScore;
 	}
 	
 	// Need getter methods to expose API on port 8081
-	public int getQuestionNumber() {
-		return questionNumber;
-	}
 	
 	public String getQuestion() {
 		return question;
@@ -38,9 +35,6 @@ public class Question {
 	}
 	
 	// Need setter methods to set individual fields
-	public void setQuestionNumber(int quesNum) {
-		this.questionNumber = quesNum;
-	}
 	
 	public void setQuestion(String ques) {
 		this.question = ques;
@@ -48,6 +42,14 @@ public class Question {
 	
 	public void setQuestionScore(int quesScore) {
 		this.questionScore = quesScore;
+	}
+
+	public QuestionType getTypeOfQuestion() {
+		return typeOfQuestion;
+	}
+
+	public void setTypeOfQuestion(QuestionType typeOfQuestion) {
+		this.typeOfQuestion = typeOfQuestion;
 	}
 	
 	
