@@ -25,7 +25,7 @@ public class DatabaseConnection {
 		 */
 		ResultSet results = statement.executeQuery("SELECT * FROM question_types");
 		
-		while(results.next()) { // While there aren't any more rows in the table...
+		while(results.next()) { // While there are more rows in the table...
 			
 			String data = results.getString(1);
 			System.out.println("Fetching data by column index for row " + results.getRow() + " : " + data);
