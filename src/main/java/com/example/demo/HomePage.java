@@ -10,7 +10,7 @@ import java.util.*;
 
 import com.example.demo.Model.*;
 
-@CrossOrigin(origins = "https://automation-of-rubriks.herokuapp.com")
+@CrossOrigin(origins = {"https://automation-of-rubriks.herokuapp.com", "http://localhost:3000"})
 @RestController
 public class HomePage {
 	
@@ -23,7 +23,7 @@ public class HomePage {
 	}
 	
 	@GetMapping("/teams")
-	public Team teamsToReturn() {
+	public List<String> teamsToReturn() {
 		return surveyManageService.findAllTeams();
 	}
 	

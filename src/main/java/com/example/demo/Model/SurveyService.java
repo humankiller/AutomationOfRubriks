@@ -15,6 +15,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @JsonSerialize
 public class SurveyService {
 	
+	DatabaseConnection dbconnect = new DatabaseConnection();
+	
 	public SurveyService() {
 		
 	}
@@ -79,9 +81,13 @@ public class SurveyService {
 		return surveyQuestionsToReturn;
 	}
 	
-	public Team findAllTeams() {
+	public List<String> findAllTeams() {
 		
-		return team1;
+		List<String> teamNames = new ArrayList<>();
+		
+		teamNames = dbconnect.getTeamNames();
+		
+		return teamNames;
 		
 	}
 	
