@@ -3,12 +3,18 @@ package com.example.demo.Model;
 import java.sql.*; // Import java SQL library
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class DatabaseConnection {
 	
+	public static Connection con;
+	
+	public static Statement statement;
+	
 	public static void main(String[] args) throws SQLException {
 		
-		Statement statement = establishConnection();
+		
+		//statement = establishConnection();
 		
 		/*
 		 * 1. Create ResultSet object to hold the results
@@ -16,6 +22,8 @@ public class DatabaseConnection {
 		 * 		a. "SELECT *" means select all
 		 * 		b. "FROM question_types" means from the table that you give it (in this case question_types)
 		 */
+		
+		/*
 	
 		ResultSet results = statement.executeQuery("SELECT * FROM question_types");
 		
@@ -35,9 +43,11 @@ public class DatabaseConnection {
 			
 		}
 		
-		//int[] questionIDs = {3, 4, 5};
+		*/
 		
-		//List<Question> questions = getQuestions(questionIDs);
+		//int[] questionIDs = {3, 4, 5}; // TESTING
+		
+		SurveyQuestions surveyQuestions = buildSurveyQuestionsObject(5); // TESTING
 		
 		
 	}
@@ -46,7 +56,11 @@ public class DatabaseConnection {
 		
 		List<Team> teamNames = new ArrayList<>();
 		
-		Statement statement = establishConnection();
+		if(con == null) {
+			
+			statement = establishConnection();
+			
+		}
 		
 		try {
 			
@@ -86,11 +100,15 @@ public class DatabaseConnection {
 		
 	}
 	
-	public SurveyQuestions buildSurveyQuestionsObject() {
+	public static SurveyQuestions buildSurveyQuestionsObject(int id) {
 		
 		SurveyQuestions surveyQuestionsToReturn = new SurveyQuestions();
 		
-		Statement statement = establishConnection();
+		if(con == null) {
+			
+			statement = establishConnection();
+			
+		}
 		
 		try {
 			
@@ -100,11 +118,53 @@ public class DatabaseConnection {
 			 * 		a. "SELECT *" means select all
 			 * 		b. "FROM question_types" means from the table that you give it (in this case question_types)
 			 */
-			ResultSet results = statement.executeQuery("SELECT * FROM survey_questions");
+			ResultSet results = statement.executeQuery("SELECT * FROM surveys");
 			
 			while(results.next()) { // While there are more rows in the table...
 				
+				int tempSurveyId = results.getInt("id");
 				
+				if(tempSurveyId == id) {
+					
+					System.out.println("Im here2");
+					
+					/* First, we need to get the survey object */
+					
+					int surveyTypesId = results.getInt("survey_types_id");
+					
+					SurveyType surveyType = getSurveyType(surveyTypesId);
+					
+					String surveyName = results.getString("name");
+					
+					Survey survey = new Survey(surveyType, surveyName);
+					
+					surveyQuestionsToReturn.setSurvey(survey);
+					
+					/* Next, we need the ArrayList of question objects */
+					
+					Array arrayOfQuestionIdsBeforeConversion = results.getArray("array_of_questions_ids");;
+					
+					int[] arrayOfQuestionIds = (int[]) arrayOfQuestionIdsBeforeConversion.getArray(); // must convert to int array
+					
+					List<Question> questionsInSurvey = new ArrayList<>();
+					
+					questionsInSurvey = getQuestions(arrayOfQuestionIds);
+					
+					surveyQuestionsToReturn.setQuestions(questionsInSurvey);
+					
+					/* Next, we need the number of questions */
+					
+					int questionNumber = questionsInSurvey.size();
+					
+					surveyQuestionsToReturn.setQuestionNumber(questionNumber);
+					
+					/* Last, we need the total score (we'll set it to 0 */
+					
+					int totalScore = 0;
+					
+					surveyQuestionsToReturn.setTotalScore(totalScore);
+					
+				}
 				
 			}
 			
@@ -153,40 +213,148 @@ public class DatabaseConnection {
 		
 		List<Question> questions = new ArrayList<>();
 		
-		Statement statement = establishConnection();
+		if(con == null) {
+			
+			statement = establishConnection();
+			
+		}
 		
 		try {
 			
 			ResultSet results = statement.executeQuery("SELECT * FROM questions");
 			
-			for(int i = 0; i < questionIndexes.length; i++) {
+			while(results.next()) {
 				
-				System.out.println("YAY");
+				Question questionToAdd = new Question();
 				
-				if(results.getInt("id") == questionIndexes[i]) {
+				int id = results.getInt("id");
+				
+				String idAsString = Integer.toString(id);
+				
+				System.out.println("Here's the ID: " + idAsString);
+				
+				for(int i = 0; i < questionIndexes.length; i++) {
 					
-					String question = results.getString("question");
-					
-					System.out.println(question);
-					
-					Question questionToAdd = new Question();
-					
-					questionToAdd.setQuestion(question);
-					
-					questionToAdd.setQuestionScore(0); // HARDCODED
-					
-					questions.add(questionToAdd);
+					if(id == questionIndexes[i]) {
+						
+						String question = results.getString("question");
+						
+						System.out.println("Here is a question: " + question);
+						
+						int questionTypeId = results.getInt("question_types_id");
+						
+						String questionTypeAsString = Integer.toString(questionTypeId);
+						
+						System.out.println("Here is the Question Type ID: " + questionTypeAsString);
+						
+						QuestionType questionType = getQuestionType(questionTypeId);
+						
+						questionToAdd.setTypeOfQuestion(questionType);
+						
+						questionToAdd.setQuestionScore(-1); // HARDCOODED
+						
+						questionToAdd.setQuestion(question);
+						
+						questions.add(questionToAdd);
+						
+					}
 					
 				}
 				
 			}
 			
 		} catch (SQLException e) {
-			System.out.println("ERROR");
+			System.out.println("QUESTION ERROR");
 			
 		}
 		
+		System.out.println("The questions have been returned.");
+		
 		return questions;
+	}
+	
+	public static QuestionType getQuestionType(int id) {
+		
+		String idAsString = Integer.toString(id);
+		
+		if(con == null) {
+			
+			statement = establishConnection();
+			
+		}
+		
+		QuestionType questionTypeToReturn = new QuestionType();
+		
+		try {
+			ResultSet results = statement.executeQuery("SELECT * FROM question_types");
+			
+			while(results.next()) {
+				
+				int tempId = results.getInt("id");
+				
+				if(tempId == id) {
+					
+					String questionTypeName = results.getString("name");
+					
+					questionTypeToReturn.setName(questionTypeName);
+					
+					String questionTypeDesc = results.getString("description");
+					
+					questionTypeToReturn.setDescription(questionTypeDesc);
+					
+				}
+				
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("QUESTION TYPE ERROR");
+			
+		}
+		
+		return questionTypeToReturn;
+		
+	}
+	
+	public static SurveyType getSurveyType(int id) {
+		
+		String idAsString = Integer.toString(id);
+		
+		if(con == null) {
+			
+			statement = establishConnection();
+			
+		}
+		
+		SurveyType surveyTypeToReturn = new SurveyType();
+		
+		try {
+			ResultSet results = statement.executeQuery("SELECT * FROM question_types");
+			
+			while(results.next()) {
+				
+				int tempId = results.getInt("id");
+				
+				if(tempId == id) {
+					
+					String surveyTypeName = results.getString("name");
+					
+					surveyTypeToReturn.setName(surveyTypeName);
+					
+					String surveyTypeDesc = results.getString("description");
+					
+					surveyTypeToReturn.setDescription(surveyTypeDesc);
+					
+				}
+				
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("SURVEY TYPE ERROR");
+			
+		}
+		
+		return surveyTypeToReturn;
+		
 	}
 		
 }
