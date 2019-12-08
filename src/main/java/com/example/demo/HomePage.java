@@ -40,15 +40,21 @@ public class HomePage {
 		return new ResponseEntity<Integer[]>(questionScores, HttpStatus.OK);
 	}
 	
-	@PutMapping("/teamselect")
-	public void func() {
-		
-	}
-	
 	
 	@GetMapping("/results")
 	public int surveyResults() {
 		return surveyManageService.calculateScore();
+	}
+	
+	@PutMapping("/teamselect")
+	public ResponseEntity<String> test(@RequestBody String selectedTeam) {
+		surveyManageService.saveSelectedTeam(selectedTeam);
+		return new ResponseEntity<String>(selectedTeam, HttpStatus.OK);
+	}
+	
+	@GetMapping("/teamselected")
+	public String printSelectedTeam() {
+		return surveyManageService.printTeam();
 	}
 	
 	@RequestMapping("/home")

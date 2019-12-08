@@ -21,6 +21,8 @@ public class SurveyService {
 		
 	}
 	
+	private String teamSelected;
+	
 	private Survey survey = new Survey();
 	
 	private List<Question> questions = new ArrayList<>();
@@ -105,6 +107,14 @@ public class SurveyService {
 		}
 		
 		return finalScore;
+	}
+	
+	public void saveSelectedTeam(String selectedTeam) {
+		teamSelected = selectedTeam;
+	}
+	
+	public String printTeam() {
+		return teamSelected;
 	}
 
 }
