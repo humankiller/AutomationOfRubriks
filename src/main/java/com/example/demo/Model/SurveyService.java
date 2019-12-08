@@ -81,9 +81,9 @@ public class SurveyService {
 		return surveyQuestionsToReturn;
 	}
 	
-	public List<String> findAllTeams() {
+	public List<Team> findAllTeams() {
 		
-		List<String> teamNames = new ArrayList<>();
+		List<Team> teamNames = new ArrayList<>();
 		
 		teamNames = dbconnect.getTeamNames();
 		

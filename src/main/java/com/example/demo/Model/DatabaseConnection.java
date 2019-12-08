@@ -61,9 +61,9 @@ public class DatabaseConnection {
 		
 	}
 	
-	public List<String> getTeamNames() {
+	public List<Team> getTeamNames() {
 		
-		List<String> teamNames = new ArrayList<>();
+		List<Team> teamNames = new ArrayList<>();
 		
 		Connection con = null;
 		
@@ -101,7 +101,11 @@ public class DatabaseConnection {
 				data = results.getString("name"); // call getString function w/ parameter "name" (column w/ data type string in database)
 				System.out.println("Fetching data by column name for row " + results.getRow() + " : " + data);
 				
-				teamNames.add(data);
+				Team teamToAdd = new Team();
+				
+				teamToAdd.setTeamName(data);
+				
+				teamNames.add(teamToAdd);
 				
 			}
 			

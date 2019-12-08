@@ -23,7 +23,7 @@ public class HomePage {
 	}
 	
 	@GetMapping("/teams")
-	public List<String> teamsToReturn() {
+	public List<Team> teamsToReturn() {
 		return surveyManageService.findAllTeams();
 	}
 	
