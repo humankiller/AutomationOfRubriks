@@ -40,6 +40,11 @@ public class HomePage {
 		return new ResponseEntity<Integer[]>(questionScores, HttpStatus.OK);
 	}
 	
+	@PutMapping("/teamselect")
+	public void func() {
+		
+	}
+	
 	
 	@GetMapping("/results")
 	public int surveyResults() {
