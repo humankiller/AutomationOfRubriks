@@ -47,7 +47,7 @@ public class DatabaseConnection {
 		
 		//int[] questionIDs = {3, 4, 5}; // TESTING
 		
-		SurveyQuestions surveyQuestions = buildSurveyQuestionsObject(5); // TESTING
+		//SurveyQuestions surveyQuestions = buildSurveyQuestionsObject(5); // TESTING
 		
 		
 	}
@@ -140,7 +140,7 @@ public class DatabaseConnection {
 					
 					surveyQuestionsToReturn.setSurvey(survey);
 					
-					/* Next, we need the ArrayList of question objects */
+					/* Next, we need the ArrayList of question objects */ 
 					
 					Array arrayOfQuestionIdsBeforeConversion = results.getArray("array_of_questions_ids");;
 					
