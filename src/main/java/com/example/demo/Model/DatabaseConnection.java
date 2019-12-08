@@ -47,7 +47,7 @@ public class DatabaseConnection {
 		
 		//int[] questionIDs = {3, 4, 5}; // TESTING
 		
-		//SurveyQuestions surveyQuestions = buildSurveyQuestionsObject(5); // TESTING
+		SurveyQuestions surveyQuestions = buildSurveyQuestionsObject(6); // TESTING
 		
 		
 	}
@@ -126,13 +126,15 @@ public class DatabaseConnection {
 				
 				if(tempSurveyId == id) {
 					
-					System.out.println("Im here2");
-					
 					/* First, we need to get the survey object */
 					
 					int surveyTypesId = results.getInt("survey_types_id");
 					
+					System.out.println("Here is the survey type id: " + Integer.toString(surveyTypesId));
+					
 					SurveyType surveyType = getSurveyType(surveyTypesId);
+					
+					System.out.println("Im here2");
 					
 					String surveyName = results.getString("name");
 					
@@ -142,9 +144,19 @@ public class DatabaseConnection {
 					
 					/* Next, we need the ArrayList of question objects */ 
 					
-					Array arrayOfQuestionIdsBeforeConversion = results.getArray("array_of_questions_ids");;
+					String stringOfQuestionIdsBeforeConversion = results.getString("array_of_questions_ids");
 					
-					int[] arrayOfQuestionIds = (int[]) arrayOfQuestionIdsBeforeConversion.getArray(); // must convert to int array
+					String[] spaces = stringOfQuestionIdsBeforeConversion.split(" ");
+					
+					int[] arrayOfQuestionIds = new int[spaces.length];
+					
+					for(int i = 0; i < spaces.length; i++) {
+						
+						String questionIdAsString = spaces[i];
+						
+						arrayOfQuestionIds[i] = (Integer.parseInt(questionIdAsString));
+						
+					}
 					
 					List<Question> questionsInSurvey = new ArrayList<>();
 					
@@ -202,7 +214,7 @@ public class DatabaseConnection {
 			return statement;
 			
 		} catch (SQLException e) {
-			System.out.println("Could not connect to the database.");
+			System.out.println("Could not connect to the database. HERE");
 			
 			return null;
 		}
@@ -324,6 +336,8 @@ public class DatabaseConnection {
 			statement = establishConnection();
 			
 		}
+		
+		System.out.println("Im here3");
 		
 		SurveyType surveyTypeToReturn = new SurveyType();
 		

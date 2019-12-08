@@ -80,7 +80,13 @@ public class SurveyService {
 	// test comment
 	public SurveyQuestions findAll() {
 		
-		return surveyQuestionsToReturn;
+		SurveyQuestions surveyQuestionsFromDatabase = new SurveyQuestions();
+		
+		surveyQuestionsFromDatabase = dbconnect.buildSurveyQuestionsObject(6); // Hardcoded
+		
+		//return surveyQuestionsToReturn;
+		
+		return surveyQuestionsFromDatabase;
 	}
 	
 	public List<Team> findAllTeams() {
