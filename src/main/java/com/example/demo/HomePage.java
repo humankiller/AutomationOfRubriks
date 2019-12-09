@@ -14,6 +14,8 @@ import com.example.demo.Model.*;
 @RestController
 public class HomePage {
 	
+	private SurveyQuestions surveyQuestionsResults = new SurveyQuestions();
+	
 	@Autowired
 	private SurveyService surveyManageService;
 	
@@ -37,8 +39,11 @@ public class HomePage {
 		
 		List<Integer> scores = Arrays.asList(questionScores);
 		*/
+		
+		surveyQuestionsResults = resultOfSurveyQuestions;
+		
 		surveyManageService.saveScores(resultOfSurveyQuestions);
-		surveyManageService.calculateScore();
+		surveyManageService.calculateScore(resultOfSurveyQuestions);
 		
 		return new ResponseEntity<SurveyQuestions>(resultOfSurveyQuestions, HttpStatus.OK);
 	}
@@ -46,7 +51,7 @@ public class HomePage {
 	
 	@GetMapping("/results")
 	public int surveyResults() {
-		return surveyManageService.calculateScore();
+		return surveyManageService.calculateScore(surveyQuestionsResults);
 	}
 	
 	@PutMapping("/teamselect")

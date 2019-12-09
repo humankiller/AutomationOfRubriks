@@ -111,14 +111,16 @@ public class SurveyService {
 		//dbconnect.saveSurveyQuestionsResults(resultsOfSurveyQuestions);
 	}
 	
-	public int calculateScore() {
-		int finalScore = 0;
+	public int calculateScore(SurveyQuestions resultOfSurveyQuestions) {
 		
+		/*
 		for(int i = 0; i < questions.size(); i++) {
 			finalScore += questions.get(i).getQuestionScore();
 		}
 		
-		return finalScore;
+		*/
+		
+		return resultOfSurveyQuestions.getTotalScore();
 	}
 	
 	public void saveSelectedTeam(String selectedTeam) {
