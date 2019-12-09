@@ -14,7 +14,7 @@ import com.example.demo.Model.*;
 @RestController
 public class HomePage {
 	
-	private SurveyQuestions surveyQuestionsResults = new SurveyQuestions();
+	private SurveyQuestions surveyQuestionsResults;
 	
 	@Autowired
 	private SurveyService surveyManageService;
