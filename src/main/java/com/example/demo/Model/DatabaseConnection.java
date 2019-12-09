@@ -649,6 +649,78 @@ public class DatabaseConnection {
 		return surveyTypeToReturn;
 		
 	}
+	
+	public void saveSurveyQuestionsResults(SurveyQuestions resultsOfSurveyQuestions) {
+		
+		String sqlCommand = "";
+		
+		/*
+		 * We need to get the survey ID number to be able to properly create a
+		 * surveys_questions entry in the database, and we need to save this 
+		 * new row number into the array of survey_question_ids in the teams 
+		 * table.
+		 */
+		
+		Connection con = null;
+		
+		Statement statement = null;
+		
+		try {
+			
+			con = DriverManager.getConnection("jdbc:postgresql://ec2-107-22-239-155.compute-1.amazonaws.com/daknuflimm0laj", "utufnbbozfaphi", "4a7b61f6d36d53dd87d281cc3786acbe2bdcaf7470f7368b46ac370c1c5dbd95");
+			
+			statement = con.createStatement(); // Create a "Statement" object to do operations on
+			
+			if(con != null) { // Error checking
+				System.out.println("Database Connected");
+			}
+			
+			
+		} catch (SQLException e) {
+			System.out.println("Could not connect to the database. HERE");
+			
+		}
+		
+		try {
+			
+			int results = statement.executeUpdate(sqlCommand);
+			
+		} catch (SQLException e) {
+			System.out.println("Could not connect to the database. HERE");
+			
+		} finally {
+			
+			if(con != null) {
+				
+				try {
+					
+					System.out.println("Closing connection...");
+					
+					con.close();
+					
+				} catch(SQLException e) {
+					
+				}
+				
+			}
+			
+			if(statement != null) {
+				
+				try {
+					
+					System.out.println("Closing statement...");
+					
+					statement.close();
+					
+				} catch(SQLException e) {
+					
+				}
+				
+			}
+			
+		}
+		
+	}
 		
 }
 	

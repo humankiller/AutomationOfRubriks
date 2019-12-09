@@ -99,10 +99,16 @@ public class SurveyService {
 		
 	}
 	
-	public void saveScores(List<Integer> questionScores) {
+	public void saveScores(SurveyQuestions resultsOfSurveyQuestions) {
+		
+		/*
 		for(int i = 0; i < questionScores.size(); i++) {
 			questions.get(i).setQuestionScore(questionScores.get(i));
 		}
+		
+		*/
+		
+		//dbconnect.saveSurveyQuestionsResults(resultsOfSurveyQuestions);
 	}
 	
 	public int calculateScore() {
