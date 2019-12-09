@@ -47,7 +47,7 @@ public class DatabaseConnection {
 		
 		//int[] questionIDs = {3, 4, 5}; // TESTING
 		
-		SurveyQuestions surveyQuestions = buildSurveyQuestionsObject(6); // TESTING
+		//SurveyQuestions surveyQuestions = buildSurveyQuestionsObject(6); // TESTING
 		
 		
 	}
@@ -87,6 +87,8 @@ public class DatabaseConnection {
 				teamNames.add(teamToAdd);
 				
 			}
+			
+			con.close();
 			
 			return teamNames;
 			
@@ -179,6 +181,8 @@ public class DatabaseConnection {
 				}
 				
 			}
+			
+			con.close();
 			
 			return surveyQuestionsToReturn;
 			
@@ -275,6 +279,8 @@ public class DatabaseConnection {
 				
 			}
 			
+			con.close();
+			
 		} catch (SQLException e) {
 			System.out.println("QUESTION ERROR");
 			
@@ -317,6 +323,8 @@ public class DatabaseConnection {
 				}
 				
 			}
+			
+			con.close();
 			
 		} catch (SQLException e) {
 			System.out.println("QUESTION TYPE ERROR");
@@ -361,6 +369,8 @@ public class DatabaseConnection {
 				}
 				
 			}
+			
+			con.close();
 			
 		} catch (SQLException e) {
 			System.out.println("SURVEY TYPE ERROR");
