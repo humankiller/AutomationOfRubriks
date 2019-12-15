@@ -251,7 +251,7 @@ public class DatabaseConnection {
 					
 					/* Last, we need the total score (we'll set it to 0 */
 					
-					int totalScore = 0;
+					double totalScore = 0.0;
 					
 					surveyQuestionsToReturn.setTotalScore(totalScore);
 					
