@@ -589,7 +589,7 @@ public class DatabaseConnection {
 		SurveyType surveyTypeToReturn = new SurveyType();
 		
 		try {
-			ResultSet results = statement.executeQuery("SELECT * FROM question_types");
+			ResultSet results = statement.executeQuery("SELECT * FROM survey_types");
 			
 			while(results.next()) {
 				
