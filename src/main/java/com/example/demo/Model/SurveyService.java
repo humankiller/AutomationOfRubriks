@@ -111,7 +111,7 @@ public class SurveyService {
 		//dbconnect.saveSurveyQuestionsResults(resultsOfSurveyQuestions);
 	}
 	
-	public int calculateScore(SurveyQuestions resultOfSurveyQuestions) {
+	public double calculateScore(SurveyQuestions resultOfSurveyQuestions) {
 		
 		/*
 		for(int i = 0; i < questions.size(); i++) {

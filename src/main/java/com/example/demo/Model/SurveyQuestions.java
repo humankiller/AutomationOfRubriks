@@ -20,13 +20,13 @@ public class SurveyQuestions {
 	
 	private int questionNumber;
 	
-	private int totalScore;
+	private double totalScore;
 	
 	public SurveyQuestions() {
 		
 	}
 	
-	public SurveyQuestions(Survey survey, List<Question> questions, int questionNumber, int totalScore) {
+	public SurveyQuestions(Survey survey, List<Question> questions, int questionNumber, double totalScore) {
 		this.survey = survey;
 		this.questions = questions;
 		this.questionNumber = questionNumber;
@@ -57,11 +57,11 @@ public class SurveyQuestions {
 		this.questionNumber = questionNumber;
 	}
 
-	public int getTotalScore() {
+	public double getTotalScore() {
 		return totalScore;
 	}
 
-	public void setTotalScore(int totalScore) {
+	public void setTotalScore(double totalScore) {
 		this.totalScore = totalScore;
 	}
 	

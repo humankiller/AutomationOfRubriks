@@ -50,7 +50,7 @@ public class HomePage {
 	
 	
 	@GetMapping("/results")
-	public int surveyResults() {
+	public double surveyResults() {
 		return surveyManageService.calculateScore(surveyQuestionsResults);
 	}
 	
