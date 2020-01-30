@@ -130,5 +130,15 @@ public class SurveyService {
 	public String printTeam() {
 		return teamSelected;
 	}
+	
+	public List<User> getUsers() {
+		
+		List<User> usersInDatabase = new ArrayList<>();
+		
+		usersInDatabase = dbconnect.getUsersFromDatabase();
+		
+		return usersInDatabase;
+		
+	}
 
 }

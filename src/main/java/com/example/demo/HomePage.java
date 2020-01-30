@@ -70,6 +70,11 @@ public class HomePage {
 		return "You have reached the Home Page for StateFarm's Rubriks";
 	}
 	
+	@GetMapping("/tblusers")
+	public List<User> usersToReturn() {
+		return surveyManageService.getUsers();
+	}
+	
 	/*
 	@RequestMapping("/survey")
 	public String surveyPage() {

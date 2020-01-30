@@ -52,6 +52,79 @@ public class DatabaseConnection {
 		
 	}
 	
+/*
+ * Here is a test function that gets all of the users out of the data out of the database
+ ********************************************************************************************************************************************************************
+ */
+	
+	public List<User> getUsersFromDatabase() {
+		
+		List<User> users = new ArrayList<>();
+		
+		Connection con = null;
+		
+		Statement statement = null;
+		
+		try {
+			
+			con = DriverManager.getConnection("jdbc:postgresql://ec2-107-22-239-155.compute-1.amazonaws.com/daknuflimm0laj", "utufnbbozfaphi", "4a7b61f6d36d53dd87d281cc3786acbe2bdcaf7470f7368b46ac370c1c5dbd95");
+			
+			statement = con.createStatement(); // Create a "Statement" object to do operations on
+			
+			if(con != null) { // Error checking
+				System.out.println("Database Connected");
+			}
+			
+			
+		} catch (SQLException e) {
+			System.out.println("Could not connect to the database.");
+		}
+		
+		try {
+			
+			ResultSet results = statement.executeQuery("SELECT * FROM tblusers");
+			
+			while(results.next()) { // While there are more rows in the table...
+				
+				String username = results.getString("username"); // call getString function w/ parameter "username" (column w/ data type string in database)
+				
+				String password = results.getString("password");
+				
+				boolean admin = results.getBoolean("admin");
+				
+				User newUser = new User(username, password, admin);
+				
+				users.add(newUser);
+				
+			}
+			
+		} catch(SQLException e) {
+			System.out.println("Could not retrieve users from the database.");
+		} finally {
+			
+			if(con != null) {
+				try {
+					System.out.println("Closing connection...");
+					con.close();
+				} catch(SQLException e) {
+					
+				}
+			}
+			if(statement != null) {
+				try {
+					System.out.println("Closing statement...");
+					statement.close();
+				} catch(SQLException e) {
+					
+				}
+			}
+		}
+		
+		return users;
+	}
+	
+/* **************************************************************************************************************************************************************** */
+	
 	public List<Team> getTeamNames() {
 		
 		List<Team> teamNames = new ArrayList<>();
@@ -72,9 +145,11 @@ public class DatabaseConnection {
 			
 			
 		} catch (SQLException e) {
-			System.out.println("Could not connect to the database. HERE");
+			System.out.println("Could not retrieve data from the database " + e.getMessage());
 			
 		}
+		
+		
 		
 		/*
 		
