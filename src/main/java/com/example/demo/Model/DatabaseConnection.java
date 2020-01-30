@@ -86,11 +86,11 @@ public class DatabaseConnection {
 			
 			while(results.next()) { // While there are more rows in the table...
 				
-				String username = results.getString("username"); // call getString function w/ parameter "username" (column w/ data type string in database)
+				String username = results.getString("username"); // call getString function w/ parameter "username" (column w/ data type "character varying" in database)
 				
-				String password = results.getString("password");
+				String password = results.getString("password"); // call getString function w/ parameter "password" (column w/ data type "character varying" in database)
 				
-				boolean admin = results.getBoolean("admin");
+				boolean admin = results.getBoolean("admin"); // call getBoolean function w/ parameter "admin" (column w/ data type "boolean" in database)
 				
 				User newUser = new User(username, password, admin);
 				
