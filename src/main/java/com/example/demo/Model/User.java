@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @JsonSerialize
 public class User {
 	
+	private int userid;
 	private String username;
 	private String password;
 	private boolean admin;
@@ -15,10 +16,19 @@ public class User {
 		
 	}
 	
-	public User(String username, String password, boolean admin) {
+	public User(int userid, String username, String password, boolean admin) {
+		this.userid = userid;
 		this.username = username;
 		this.password = password;
 		this.admin = admin;
+	}
+	
+	public int getUserid() {
+		return userid;
+	}
+	
+	public void setUserid(int userid) {
+		this.userid = userid;
 	}
 
 	public String getUsername() {
