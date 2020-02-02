@@ -171,19 +171,15 @@ public class DatabaseConnection {
 			 * 		a. "SELECT *" means select all
 			 * 		b. "FROM question_types" means from the table that you give it (in this case question_types)
 			 */
-			ResultSet results = statement.executeQuery("SELECT * FROM teams");
+			ResultSet results = statement.executeQuery("SELECT * FROM tblteams");
 			
 			while(results.next()) { // While there are more rows in the table...
 				
-				String data = results.getString(1);
-				System.out.println("Fetching data by column index for row " + results.getRow() + " : " + data);
+				int teamid = results.getInt("teamid");
 				
-				data = results.getString("name"); // call getString function w/ parameter "name" (column w/ data type string in database)
-				System.out.println("Fetching data by column name for row " + results.getRow() + " : " + data);
+				String teamName = results.getString("teamname"); // call getString function w/ parameter "name" (column w/ data type string in database)
 				
-				Team teamToAdd = new Team();
-				
-				teamToAdd.setTeamName(data);
+				Team teamToAdd = new Team(teamid, teamName);
 				
 				teamNames.add(teamToAdd);
 				

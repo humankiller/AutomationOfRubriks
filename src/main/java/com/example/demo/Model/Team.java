@@ -7,24 +7,24 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @JsonSerialize
 public class Team {
 	
-	private List<SurveyQuestions> surveys;
+	private int teamid;
 	private String teamName;
 	
 	public Team() {
 		
 	}
 	
-	public Team(List<SurveyQuestions> surveys, String teamName) {
-		this.surveys = surveys;
+	public Team(int teamid, String teamName) {
+		this.teamid = teamid;
 		this.teamName = teamName;
 	}
 
-	public List<SurveyQuestions> getSurveys() {
-		return surveys;
+	public int getTeamid() {
+		return teamid;
 	}
 
-	public void setSurveys(List<SurveyQuestions> surveys) {
-		this.surveys = surveys;
+	public void setTeamid(int teamid) {
+		this.teamid = teamid;
 	}
 
 	public String getTeamName() {
@@ -34,7 +34,5 @@ public class Team {
 	public void setTeamName(String teamName) {
 		this.teamName = teamName;
 	}
-	
-	
 
 }

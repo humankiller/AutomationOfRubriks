@@ -37,6 +37,7 @@ public class SurveyService {
 	
 	{
 	
+		/*
 		SurveyType developerSurvey = new SurveyType("Developer", "A survey for the developer");
 		survey.setTypeOfSurvey(developerSurvey);
 		survey.setName("Pre-Dojo Survey");
@@ -67,6 +68,8 @@ public class SurveyService {
 		surveysToPopulateTeam.add(surveyQuestionsToReturn);
 		team1.setSurveys(surveysToPopulateTeam);
 		team1.setTeamName("Team 1");
+		
+		*/
 		
 		
 		//surveyQuestionsToReturn = new SurveyQuestions(survey, questions, questions.size(), 0);

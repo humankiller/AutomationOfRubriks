@@ -13,8 +13,10 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @JsonSerialize
 public class QuestionType {
 	
-	private String name;
+	// Need to add "questiontypeid" integer
+	private String name; // change this to "type" to match tblquestiontype
 	private String description;
+	// Need to add "numberofoptions" integer
 	
 	public QuestionType() {
 		
