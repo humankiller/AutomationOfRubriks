@@ -151,5 +151,20 @@ public class SurveyService {
 		return insertStatus;
 		
 	}
+	
+	public boolean editTeam(Team newTeamData, String teamNameToEdit) {
+		
+		boolean editTeamStatus = dbconnect.editTeam(newTeamData, teamNameToEdit);
+		
+		return editTeamStatus;
+		
+	}
+	
+	public boolean deleteTeam(String teamNameToDelete) {
+		
+		boolean deleteStatus = dbconnect.deleteTeam(teamNameToDelete);
+		
+		return deleteStatus;
+	}
 
 }

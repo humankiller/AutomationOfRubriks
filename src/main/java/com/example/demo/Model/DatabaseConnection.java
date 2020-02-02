@@ -177,7 +177,7 @@ public class DatabaseConnection {
 					
 				} catch(SQLException e){
 					System.out.println("There was an error when trying to insert the team. " + e);
-					return true;
+					return false;
 				}
 				
 				
@@ -216,6 +216,184 @@ public class DatabaseConnection {
 	
 /* **************************************************************************************************************************************************************** */
 	
+/*
+* Here I will edit a team that already exists in the database
+********************************************************************************************************************************************************************
+*/
+	
+	public boolean editTeam(Team newTeamData, String teamNameToEdit) {
+		
+		System.out.println("Team " + teamNameToEdit + " will be changed to " + newTeamData.getTeamName());
+		
+		Connection con = null;
+		
+		Statement statement = null;
+		
+		try {
+			
+			con = DriverManager.getConnection("jdbc:postgresql://ec2-107-22-239-155.compute-1.amazonaws.com/daknuflimm0laj", "utufnbbozfaphi", "4a7b61f6d36d53dd87d281cc3786acbe2bdcaf7470f7368b46ac370c1c5dbd95");
+			
+			statement = con.createStatement(); // Create a "Statement" object to do operations on
+			
+			if(con != null) { // Error checking
+				System.out.println("Database Connected");
+			}
+			
+			
+		} catch (SQLException e) {
+			System.out.println("Could not connect to the database.");
+			return false;
+		}
+		
+		// First, I must check if the team that is being edited doesn't conflict with any other teams
+		
+		String checkForDuplicateTeam = "SELECT 1 FROM tblteams WHERE teamname = '" + newTeamData.getTeamName() + "'"; 
+		
+		try {
+			
+			ResultSet results = statement.executeQuery(checkForDuplicateTeam);
+			if(results.next() == false) { // No duplicate team was found
+				
+				System.out.println("Good to edit");
+				
+				try {
+					
+					String editTeamSQL = "UPDATE tblteams SET teamname = '" + newTeamData.getTeamName() + "' WHERE teamname = '" + teamNameToEdit + "'";
+					
+					statement.executeUpdate(editTeamSQL);
+					
+					System.out.println("Team " + teamNameToEdit + " was changed to " + newTeamData.getTeamName());
+						
+					return true;
+					
+					
+				} catch(SQLException e){
+					System.out.println("There was an error when trying to edit the team. " + e);
+					return false;
+				}
+				
+				
+			} else { // A duplicate team was found
+				System.out.println("Found duplicate");
+			}
+			
+		} catch(SQLException e) {
+			System.out.println("Could not edit team to the database" + e);
+		} finally {
+			
+			if(con != null) {
+				try {
+					System.out.println("Closing connection...");
+					con.close();
+				} catch(SQLException e) {
+					
+				}
+			}
+			if(statement != null) {
+				try {
+					System.out.println("Closing statement...");
+					statement.close();
+				} catch(SQLException e) {
+					
+				}
+			}
+		}
+		
+		return false;
+			
+	}
+	
+/* **************************************************************************************************************************************************************** */
+	
+/*
+* Here I will edit a team that already exists in the database
+********************************************************************************************************************************************************************
+*/
+	
+	public boolean deleteTeam(String teamNameToDelete) {
+		
+		System.out.println("Team " + teamNameToDelete + " will be deleted from the database.");
+		
+		Connection con = null;
+		
+		Statement statement = null;
+		
+		try {
+			
+			con = DriverManager.getConnection("jdbc:postgresql://ec2-107-22-239-155.compute-1.amazonaws.com/daknuflimm0laj", "utufnbbozfaphi", "4a7b61f6d36d53dd87d281cc3786acbe2bdcaf7470f7368b46ac370c1c5dbd95");
+			
+			statement = con.createStatement(); // Create a "Statement" object to do operations on
+			
+			if(con != null) { // Error checking
+				System.out.println("Database Connected");
+			}
+			
+			
+		} catch (SQLException e) {
+			System.out.println("Could not connect to the database.");
+			return false;
+		}
+		
+		// First, I must check if the team that is being deleted is in the database
+		
+		String checkForDuplicateTeam = "SELECT 1 FROM tblteams WHERE teamname = '" + teamNameToDelete + "'"; 
+		
+		try {
+			
+			ResultSet results = statement.executeQuery(checkForDuplicateTeam);
+			if(results.next() == true) { // There is a team in the database with that name, so it is time to delete it
+				
+				System.out.println("Found team to delete");
+				
+				try {
+					
+					String deleteTeamSQL = "DELETE FROM tblteams WHERE teamname = '" + teamNameToDelete + "'";
+					
+					statement.executeUpdate(deleteTeamSQL);
+					
+					System.out.println("Team " + teamNameToDelete + " was deleted from the database");
+						
+					return true;
+					
+					
+				} catch(SQLException e){
+					System.out.println("There was an error when trying to delete the team. " + e);
+					return false;
+				}
+				
+				
+			} else { // A duplicate team was found
+				System.out.println("There was no team with that team name to delete in the database");
+			}
+			
+		} catch(SQLException e) {
+			System.out.println("Could not delete team from the database" + e);
+		} finally {
+			
+			if(con != null) {
+				try {
+					System.out.println("Closing connection...");
+					con.close();
+				} catch(SQLException e) {
+					
+				}
+			}
+			if(statement != null) {
+				try {
+					System.out.println("Closing statement...");
+					statement.close();
+				} catch(SQLException e) {
+					
+				}
+			}
+		}
+		
+		return false;
+	
+	}
+	
+/* **************************************************************************************************************************************************************** */
+	
 	public List<Team> getTeamNames() {
 		
 		List<Team> teamNames = new ArrayList<>();
@@ -239,7 +417,6 @@ public class DatabaseConnection {
 			System.out.println("Could not retrieve data from the database " + e.getMessage());
 			
 		}
-		
 		
 		
 		/*

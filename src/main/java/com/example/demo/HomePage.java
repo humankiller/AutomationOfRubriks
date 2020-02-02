@@ -83,6 +83,23 @@ public class HomePage {
 		return new ResponseEntity<Boolean>(insertStatus, HttpStatus.OK);
 	}
 	
+	@PutMapping("/editteam/{teamNameToEdit}")
+	public ResponseEntity<Boolean> editTeam(@RequestBody Team newTeamData, @PathVariable("teamNameToEdit") String teamNameToEdit) {
+		
+		Boolean editStatus = surveyManageService.editTeam(newTeamData, teamNameToEdit);
+		
+		return new ResponseEntity<Boolean>(editStatus, HttpStatus.OK);
+	}
+	
+	@DeleteMapping("/deleteteam/{teamNameToDelete}")
+	public ResponseEntity<Boolean> deleteTeam(@PathVariable("teamNameToDelete") String teamNameToDelete) {
+		
+		Boolean deleteStatus = surveyManageService.deleteTeam(teamNameToDelete);
+		
+		return new ResponseEntity<Boolean>(deleteStatus, HttpStatus.OK);
+		
+	}
+	
 	/*
 	@RequestMapping("/survey")
 	public String surveyPage() {
