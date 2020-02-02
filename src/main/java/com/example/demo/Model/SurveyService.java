@@ -143,5 +143,13 @@ public class SurveyService {
 		return usersInDatabase;
 		
 	}
+	
+	public boolean addTeam(Team teamToInsert) {
+		
+		boolean insertStatus = dbconnect.insertTeam(teamToInsert);
+		
+		return insertStatus;
+		
+	}
 
 }

@@ -75,6 +75,14 @@ public class HomePage {
 		return surveyManageService.getUsers();
 	}
 	
+	@PostMapping("/addteam")
+	public ResponseEntity<Boolean> addTeam(@RequestBody Team teamToInsert) {
+		
+		Boolean insertStatus =  surveyManageService.addTeam(teamToInsert);
+		
+		return new ResponseEntity<Boolean>(insertStatus, HttpStatus.OK);
+	}
+	
 	/*
 	@RequestMapping("/survey")
 	public String surveyPage() {

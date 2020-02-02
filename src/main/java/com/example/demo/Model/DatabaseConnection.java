@@ -127,6 +127,95 @@ public class DatabaseConnection {
 	
 /* **************************************************************************************************************************************************************** */
 	
+/*
+* Here I will insert a team into the database
+********************************************************************************************************************************************************************
+*/
+	
+	public boolean insertTeam(Team teamToInsert) {
+		
+		System.out.println("Here is the team to insert: " + teamToInsert.getTeamName());
+		
+		Connection con = null;
+		
+		Statement statement = null;
+		
+		try {
+			
+			con = DriverManager.getConnection("jdbc:postgresql://ec2-107-22-239-155.compute-1.amazonaws.com/daknuflimm0laj", "utufnbbozfaphi", "4a7b61f6d36d53dd87d281cc3786acbe2bdcaf7470f7368b46ac370c1c5dbd95");
+			
+			statement = con.createStatement(); // Create a "Statement" object to do operations on
+			
+			if(con != null) { // Error checking
+				System.out.println("Database Connected");
+			}
+			
+			
+		} catch (SQLException e) {
+			System.out.println("Could not connect to the database.");
+			return false;
+		}
+		
+		// First, we need to check if the team is already in the database
+		String checkForDuplicateTeam = "SELECT 1 FROM tblteams WHERE teamname = '" + teamToInsert.getTeamName() + "'"; 
+		
+		try {
+			
+			ResultSet results = statement.executeQuery(checkForDuplicateTeam);
+			if(results.next() == false) { // No duplicate team was found
+				
+				System.out.println("Good to insert");
+				
+				try {
+					String insertIntoTeamTable = "INSERT INTO tblteams (teamname) VALUES ('" + teamToInsert.getTeamName() + "')";
+					
+					statement.executeUpdate(insertIntoTeamTable);
+					
+					System.out.println("Inserted " + teamToInsert.getTeamName() + " into the database.");
+					
+					return true;
+					
+				} catch(SQLException e){
+					System.out.println("There was an error when trying to insert the team. " + e);
+					return true;
+				}
+				
+				
+			} else { // A duplicate team was found
+				System.out.println("Found duplicate");
+			}
+			
+			
+		} catch(SQLException e){
+			System.out.println("Could not add team to the database" + e);
+			return false;
+		} finally {
+			
+			if(con != null) {
+				try {
+					System.out.println("Closing connection...");
+					con.close();
+				} catch(SQLException e) {
+					
+				}
+			}
+			if(statement != null) {
+				try {
+					System.out.println("Closing statement...");
+					statement.close();
+				} catch(SQLException e) {
+					
+				}
+			}
+		}
+		
+		return false;
+			
+	}
+
+	
+/* **************************************************************************************************************************************************************** */
+	
 	public List<Team> getTeamNames() {
 		
 		List<Team> teamNames = new ArrayList<>();
