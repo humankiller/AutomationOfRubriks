@@ -1,5 +1,4 @@
 # AutomationOfRubriks
-capstone project
 
 ### Agile Product Management
 [Taiga Project Management Tool](https://taiga.io/ "taiga.io")  
