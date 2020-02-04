@@ -80,12 +80,6 @@ public class SurveyService {
 	
 	public double calculateScore(SurveyQuestions resultOfSurveyQuestions) {
 		
-		/*
-		for(int i = 0; i < questions.size(); i++) {
-			finalScore += questions.get(i).getQuestionScore();
-		}
-		
-		*/
 		
 		return resultOfSurveyQuestions.getTotalScore();
 	}
