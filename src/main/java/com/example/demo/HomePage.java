@@ -67,6 +67,11 @@ public class HomePage {
 		return surveyManageService.getUsers();
 	}
 	
+	@GetMapping("/surveys")
+	public List<Survey> surveysToReturn() {
+		return surveyManageService.getSurveys();
+	}
+	
 	@PostMapping("/addteam")
 	public ResponseEntity<Boolean> addTeam(@RequestBody Team teamToInsert) {
 		

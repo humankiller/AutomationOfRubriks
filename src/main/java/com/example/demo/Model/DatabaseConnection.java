@@ -566,401 +566,71 @@ public class DatabaseConnection {
 		return surveyQuestionsToReturn;
 		
 	}
-
-/*
- **************************************************************   THE BELOW CLASS IS COMEPLETE GARBAGE   ************************************************************
- * */
-	public static SurveyQuestions buildSurveyQuestionsObject(int id) {
+	
+	public static List<Survey> getSurveys() {
 		
-		SurveyQuestions surveyQuestionsToReturn = new SurveyQuestions();
+		List<Survey> surveys = new ArrayList<>();
 		
 		Connection con = null;
 		
-		Statement statement = null;
+		Statement statementForSurveys = null;
 		
 		try {
-			
 			con = DriverManager.getConnection("jdbc:postgresql://ec2-107-22-239-155.compute-1.amazonaws.com/daknuflimm0laj", "utufnbbozfaphi", "4a7b61f6d36d53dd87d281cc3786acbe2bdcaf7470f7368b46ac370c1c5dbd95");
-			
-			statement = con.createStatement(); // Create a "Statement" object to do operations on
-			
+			statementForSurveys = con.createStatement(); // Create a "Statement" object to do operations on
 			if(con != null) { // Error checking
 				System.out.println("Database Connected");
 			}
-			
-			
 		} catch (SQLException e) {
 			System.out.println("Could not connect to the database. HERE");
 		}
 		
+		String findAllSurveys = "SELECT * FROM tblsurvey";
+		
 		try {
 			
-			/*
-			 * 1. Create ResultSet object to hold the results
-			 * 2. Call function executeQuery on Statement object and pass in SQL code:
-			 * 		a. "SELECT *" means select all
-			 * 		b. "FROM question_types" means from the table that you give it (in this case question_types)
-			 */
-			ResultSet results = statement.executeQuery("SELECT * FROM surveys");
+			ResultSet surveysData = statementForSurveys.executeQuery(findAllSurveys);
 			
-			while(results.next()) { // While there are more rows in the table...
+			while(surveysData.next()) {
 				
-				int tempSurveyId = results.getInt("id");
+				Survey newSurvey = new Survey();
 				
-				if(tempSurveyId == id) {
+				newSurvey.setSurveyid(surveysData.getInt("surveyid"));
+				
+				newSurvey.setName(surveysData.getString("name"));
+				
+				int surveyTypeid = surveysData.getInt("surveytypeid");
+				
+				String findSurveyType = "SELECT * FROM tblsurveytype WHERE surveytypeid = " + Integer.toString(surveyTypeid) + ";";
+				
+				Statement statementForSurveyType = null;
+				
+				statementForSurveyType = con.createStatement();
+				
+				ResultSet surveyTypeData = statementForSurveyType.executeQuery(findSurveyType);
+				
+				SurveyType typeOfSurvey = new SurveyType();
+				
+				while(surveyTypeData.next()) {
 					
-					/* First, we need to get the survey object */
+					typeOfSurvey.setType(surveyTypeData.getString("type"));
 					
-					int surveyTypesId = results.getInt("survey_types_id");
-					
-					System.out.println("Here is the survey type id: " + Integer.toString(surveyTypesId));
-					
-					SurveyType surveyType = getSurveyType(surveyTypesId);
-					
-					System.out.println("Im here2");
-					
-					String surveyName = results.getString("name");
-					
-					Survey survey = new Survey(0, surveyType, surveyName);
-					
-					surveyQuestionsToReturn.setSurvey(survey);
-					
-					/* Next, we need the ArrayList of question objects */ 
-					
-					String stringOfQuestionIdsBeforeConversion = results.getString("array_of_questions_ids");
-					
-					String[] spaces = stringOfQuestionIdsBeforeConversion.split(" ");
-					
-					int[] arrayOfQuestionIds = new int[spaces.length];
-					
-					for(int i = 0; i < spaces.length; i++) {
-						
-						String questionIdAsString = spaces[i];
-						
-						arrayOfQuestionIds[i] = (Integer.parseInt(questionIdAsString));
-						
-					}
-					
-					List<Question> questionsInSurvey = new ArrayList<>();
-					
-					questionsInSurvey = getQuestions(arrayOfQuestionIds);
-					
-					surveyQuestionsToReturn.setQuestions(questionsInSurvey);
-					
-					/* Last, we need the total score (we'll set it to 0 */
-					
-					double totalScore = 0.0;
-					
-					surveyQuestionsToReturn.setTotalScore(totalScore);
+					typeOfSurvey.setDescription(surveyTypeData.getString("description"));
 					
 				}
+				
+				newSurvey.setTypeOfSurvey(typeOfSurvey);
+				
+				surveys.add(newSurvey);
 				
 			}
 			
-		} catch (SQLException e) {
-			System.out.println("Could not retrieve data from the database " + e.getMessage());
-		} finally {
-			if(con != null) {
-				try {
-					System.out.println("Closing connection...");
-					con.close();
-				} catch(SQLException e) {
-					
-				}
-			}
-			if(statement != null) {
-				try {
-					System.out.println("Closing statement...");
-					statement.close();
-				} catch(SQLException e) {
-					
-				}
-			}
+		} catch(SQLException e) {
+			System.out.println("Error when trying to get all of the surveys: " + e);
 		}
 		
-		return surveyQuestionsToReturn;
+		return surveys;
 		
 	}
 	
-	public static List<Question> getQuestions(int[] questionIndexes) {
-		
-		List<Question> questions = new ArrayList<>();
-		
-		Connection con = null;
-		
-		Statement statement = null;
-		
-		try {
-			con = DriverManager.getConnection("jdbc:postgresql://ec2-107-22-239-155.compute-1.amazonaws.com/daknuflimm0laj", "utufnbbozfaphi", "4a7b61f6d36d53dd87d281cc3786acbe2bdcaf7470f7368b46ac370c1c5dbd95");
-			statement = con.createStatement(); // Create a "Statement" object to do operations on
-			if(con != null) { // Error checking
-				System.out.println("Database Connected");
-			}
-			
-		} catch (SQLException e) {
-			System.out.println("Could not connect to the database. HERE");
-		}
-		
-		try {
-			
-			ResultSet results = statement.executeQuery("SELECT * FROM questions");
-			
-			while(results.next()) {
-				
-				Question questionToAdd = new Question();
-				
-				int id = results.getInt("id");
-				
-				String idAsString = Integer.toString(id);
-				
-				System.out.println("Here's the ID: " + idAsString);
-				
-				for(int i = 0; i < questionIndexes.length; i++) {
-					
-					if(id == questionIndexes[i]) {
-						
-						String question = results.getString("question");
-						
-						System.out.println("Here is a question: " + question);
-						
-						int questionTypeId = results.getInt("question_types_id");
-						
-						String questionTypeAsString = Integer.toString(questionTypeId);
-						
-						System.out.println("Here is the Question Type ID: " + questionTypeAsString);
-						
-						QuestionType questionType = getQuestionType(questionTypeId);
-						
-						questionToAdd.setTypeOfQuestion(questionType);
-						
-						questionToAdd.setQuestionScore(-1); // HARDCOODED
-						
-						questionToAdd.setQuestion(question);
-						
-						questions.add(questionToAdd);
-						
-					}
-					
-				}
-				
-			}
-			
-			//con.close();
-			
-		} catch (SQLException e) {
-			System.out.println("QUESTION ERROR");
-			
-		} finally {
-			if(con != null) {
-				try {
-					System.out.println("Closing connection...");
-					con.close();
-				} catch(SQLException e) {
-					
-				}
-			}
-			if(statement != null) {
-				try {
-					System.out.println("Closing statement...");
-					statement.close();
-				} catch(SQLException e) {
-					
-				}
-			}
-		}
-
-		System.out.println("The questions have been returned.");
-		
-		return questions;
-	}
-	
-	public static QuestionType getQuestionType(int id) {
-		
-		String idAsString = Integer.toString(id);
-		
-		Connection con = null;
-		
-		Statement statement = null;
-		
-		try {
-			con = DriverManager.getConnection("jdbc:postgresql://ec2-107-22-239-155.compute-1.amazonaws.com/daknuflimm0laj", "utufnbbozfaphi", "4a7b61f6d36d53dd87d281cc3786acbe2bdcaf7470f7368b46ac370c1c5dbd95");
-			statement = con.createStatement(); // Create a "Statement" object to do operations on
-			if(con != null) { // Error checking
-				System.out.println("Database Connected");
-			}
-		} catch (SQLException e) {
-			System.out.println("Could not connect to the database. HERE");
-		}
-		
-		QuestionType questionTypeToReturn = new QuestionType();
-		
-		try {
-			ResultSet results = statement.executeQuery("SELECT * FROM question_types");
-			
-			while(results.next()) {
-				
-				int tempId = results.getInt("id");
-				
-				if(tempId == id) {
-					
-					String questionTypeType = results.getString("type");
-					
-					questionTypeToReturn.setType(questionTypeType);
-					
-					String questionTypeDesc = results.getString("description");
-					
-					questionTypeToReturn.setDescription(questionTypeDesc);
-					
-					int numberOfOptions = results.getInt("numberofoptions");
-					
-					questionTypeToReturn.setNumberOfOptions(numberOfOptions);
-					
-				}
-				
-			}
-			
-		} catch (SQLException e) {
-			System.out.println("QUESTION TYPE ERROR");
-		} finally {
-			if(con != null) {
-				try {
-					System.out.println("Closing connection...");
-					con.close();
-				} catch(SQLException e) {
-					
-				}
-			}
-			if(statement != null) {
-				try {
-					System.out.println("Closing statement...");
-					statement.close();
-				} catch(SQLException e) {
-					
-				}
-			}
-		}
-		
-		return questionTypeToReturn;
-		
-	}
-	
-	public static SurveyType getSurveyType(int id) {
-		
-		String idAsString = Integer.toString(id);
-		
-		Connection con = null;
-		
-		Statement statement = null;
-		
-		try {
-			con = DriverManager.getConnection("jdbc:postgresql://ec2-107-22-239-155.compute-1.amazonaws.com/daknuflimm0laj", "utufnbbozfaphi", "4a7b61f6d36d53dd87d281cc3786acbe2bdcaf7470f7368b46ac370c1c5dbd95");
-			statement = con.createStatement(); // Create a "Statement" object to do operations on
-			if(con != null) { // Error checking
-				System.out.println("Database Connected");
-			}
-		} catch (SQLException e) {
-			System.out.println("Could not connect to the database. HERE");
-		}
-		
-		System.out.println("Im here3");
-		
-		SurveyType surveyTypeToReturn = new SurveyType();
-		
-		try {
-			ResultSet results = statement.executeQuery("SELECT * FROM survey_types");
-			
-			while(results.next()) {
-				
-				int tempId = results.getInt("id");
-				
-				if(tempId == id) {
-					
-					String surveyTypeType = results.getString("type");
-					
-					surveyTypeToReturn.setType(surveyTypeType);
-					
-					String surveyTypeDesc = results.getString("description");
-					
-					surveyTypeToReturn.setDescription(surveyTypeDesc);
-					
-				}
-				
-			}
-			
-		} catch (SQLException e) {
-			System.out.println("SURVEY TYPE ERROR");
-		} finally {
-			if(con != null) {
-				try {
-					System.out.println("Closing connection...");
-					con.close();
-				} catch(SQLException e) {
-					
-				}
-			}
-			if(statement != null) {
-				try {
-					System.out.println("Closing statement...");
-					statement.close();
-				} catch(SQLException e) {
-					
-				}
-			}
-		}
-		
-		return surveyTypeToReturn;
-		
-	}
-	
-	public void saveSurveyQuestionsResults(SurveyQuestions resultsOfSurveyQuestions) {
-		
-		String sqlCommand = "";
-		
-		/*
-		 * We need to get the survey ID number to be able to properly create a
-		 * surveys_questions entry in the database, and we need to save this 
-		 * new row number into the array of survey_question_ids in the teams 
-		 * table.
-		 */
-		
-		Connection con = null;
-		
-		Statement statement = null;
-		
-		try {
-			con = DriverManager.getConnection("jdbc:postgresql://ec2-107-22-239-155.compute-1.amazonaws.com/daknuflimm0laj", "utufnbbozfaphi", "4a7b61f6d36d53dd87d281cc3786acbe2bdcaf7470f7368b46ac370c1c5dbd95");
-			statement = con.createStatement(); // Create a "Statement" object to do operations on
-			if(con != null) { // Error checking
-				System.out.println("Database Connected");
-			}
-		} catch (SQLException e) {
-			System.out.println("Could not connect to the database. HERE");
-		}
-		
-		try {
-			
-			int results = statement.executeUpdate(sqlCommand);
-			
-		} catch (SQLException e) {
-			System.out.println("Could not connect to the database. HERE");
-			
-		} finally {
-			if(con != null) {
-				try {
-					System.out.println("Closing connection...");
-					con.close();
-				} catch(SQLException e) {
-					
-				}
-			}
-			if(statement != null) {
-				try {
-					System.out.println("Closing statement...");
-					statement.close();
-				} catch(SQLException e) {
-					
-				}
-			}
-		}
-	}
 }

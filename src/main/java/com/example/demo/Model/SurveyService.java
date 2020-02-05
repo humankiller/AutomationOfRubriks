@@ -124,5 +124,13 @@ public class SurveyService {
 		
 		return deleteStatus;
 	}
+	
+	public List<Survey> getSurveys() {
+		
+		List<Survey> surveys = dbconnect.getSurveys();
+		
+		return surveys;
+		
+	}
 
 }
