@@ -19,9 +19,9 @@ public class HomePage {
 	@Autowired
 	private SurveyService surveyManageService;
 	
-	@GetMapping("/survey")
-	public SurveyQuestions surveyQuestionsToReturn() {
-		return surveyManageService.findAll();
+	@PutMapping("/survey")
+	public SurveyQuestions surveyQuestionsToReturn(@RequestBody Survey selectedSurvey) {
+		return surveyManageService.getSurvey(selectedSurvey);
 	}
 	
 	@GetMapping("/teams")
