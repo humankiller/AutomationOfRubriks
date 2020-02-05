@@ -49,7 +49,7 @@ public class SurveyService {
 		
 		SurveyQuestions surveyQuestionsFromDatabase = new SurveyQuestions();
 		
-		surveyQuestionsFromDatabase = dbconnect.buildSurveyQuestionsObject(6); // Hardcoded
+		surveyQuestionsFromDatabase = dbconnect.buildSurveyQuestions(1); // HARDCODED FOR DEMO, BUT CAN TAKE IN ANY NUMBER
 		
 		//return surveyQuestionsToReturn;
 		

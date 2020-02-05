@@ -32,14 +32,6 @@ public class HomePage {
 	@PutMapping("/results")
 	public ResponseEntity<SurveyQuestions> setScores(@RequestBody SurveyQuestions resultOfSurveyQuestions) {
 		
-		/*
-		for(int i = 0; i < questionScores.length; i++) {
-			System.out.println(questionScores[i]);
-		}
-		
-		List<Integer> scores = Arrays.asList(questionScores);
-		*/
-		
 		surveyQuestionsResults = resultOfSurveyQuestions;
 		
 		surveyManageService.saveScores(resultOfSurveyQuestions);

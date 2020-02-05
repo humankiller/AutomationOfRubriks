@@ -18,18 +18,15 @@ public class SurveyQuestions {
 	
 	private List<Question> questions;
 	
-	private int questionNumber;
-	
 	private double totalScore;
 	
 	public SurveyQuestions() {
 		
 	}
 	
-	public SurveyQuestions(Survey survey, List<Question> questions, int questionNumber, double totalScore) {
+	public SurveyQuestions(Survey survey, List<Question> questions, double totalScore) {
 		this.survey = survey;
 		this.questions = questions;
-		this.questionNumber = questionNumber;
 		this.totalScore = totalScore;
 	}
 
@@ -48,15 +45,7 @@ public class SurveyQuestions {
 	public void setQuestions(List<Question> questions) {
 		this.questions = questions;
 	}
-
-	public int getQuestionNumber() {
-		return questionNumber;
-	}
-
-	public void setQuestionNumber(int questionNumber) {
-		this.questionNumber = questionNumber;
-	}
-
+	
 	public double getTotalScore() {
 		return totalScore;
 	}

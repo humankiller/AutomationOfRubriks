@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @JsonSerialize
 public class Survey {
 	
+	private int surveyid;
 	private SurveyType typeOfSurvey;
 	private String name;
 	
@@ -20,9 +21,18 @@ public class Survey {
 		
 	}
 	
-	public Survey(SurveyType typeOfSurvey, String name) {
+	public Survey(int surveyid, SurveyType typeOfSurvey, String name) {
+		this.surveyid = surveyid;
 		this.typeOfSurvey = typeOfSurvey;
 		this.name = name;
+	}
+	
+	public int getSurveyid() {
+		return surveyid;
+	}
+
+	public void setSurveyid(int surveyid) {
+		this.surveyid = surveyid;
 	}
 	
 	public SurveyType getTypeOfSurvey() {

@@ -399,6 +399,177 @@ public class DatabaseConnection {
 		
 	}
 	
+//HERE
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	
+	public static SurveyQuestions buildSurveyQuestions(int givenSurveyid) {
+		
+		SurveyQuestions surveyQuestionsToReturn = new SurveyQuestions();
+		
+		Survey survey = new Survey();
+		
+		SurveyType typeOfSurvey = new SurveyType();
+		
+		ArrayList<Question> questions = new ArrayList<>();
+		
+		Connection con = null;
+		
+		Statement statement = null;
+		
+		try {
+			
+			con = DriverManager.getConnection("jdbc:postgresql://ec2-107-22-239-155.compute-1.amazonaws.com/daknuflimm0laj", "utufnbbozfaphi", "4a7b61f6d36d53dd87d281cc3786acbe2bdcaf7470f7368b46ac370c1c5dbd95");
+			
+			statement = con.createStatement(); // Create a "Statement" object to do operations on
+			
+			if(con != null) { // Error checking
+				System.out.println("Database Connected");
+			}
+			
+			
+		} catch (SQLException e) {
+			System.out.println("Could not connect to the database. HERE");
+		}
+		
+		try {
+			
+			// First, we must look for the survey that the frontend wants to grab
+			
+			String searchForSurvey = "SELECT * FROM tblsurvey WHERE surveyid = " + Integer.toString(givenSurveyid) + ";";
+			
+			ResultSet surveyData = statement.executeQuery(searchForSurvey);
+			
+			while(surveyData.next()) {
+				
+				survey.setSurveyid(surveyData.getInt("surveyid"));
+				
+				survey.setName(surveyData.getString("name"));
+				
+				int surveyTypeKey = surveyData.getInt("surveytypeid");
+				
+				System.out.println("Here is the surveyTypeId: " + Integer.toString(surveyTypeKey));
+					
+				String searchForSurveyType = "SELECT * FROM tblsurveytype WHERE surveytypeid = " + Integer.toString(surveyTypeKey) + ";";
+				
+				Statement statementForSurveyType = null;
+				
+				statementForSurveyType = con.createStatement();
+				
+				ResultSet surveyTypeData = statementForSurveyType.executeQuery(searchForSurveyType);
+				
+				while(surveyTypeData.next()) {
+					
+					typeOfSurvey.setType(surveyTypeData.getString("type"));
+					
+					typeOfSurvey.setDescription(surveyTypeData.getString("description"));
+					
+				}
+				
+				survey.setTypeOfSurvey(typeOfSurvey);
+				
+			}
+			
+			// Next, lets build the array of questions
+			
+			String findQuestionsInSurvey = "SELECT * FROM tblquestioninsurvey WHERE surveyid = " + Integer.toString(survey.getSurveyid()) + ";";
+			
+			Statement statementForQuestionsInSurvey = null;
+			
+			statementForQuestionsInSurvey = con.createStatement();
+			
+			ResultSet questionsInSurveyData = statementForQuestionsInSurvey.executeQuery(findQuestionsInSurvey);
+			
+			while(questionsInSurveyData.next()) {
+				
+				int questionid = questionsInSurveyData.getInt("questionid");
+				
+				System.out.println("Here's the questionid: " + Integer.toString(questionid));
+				
+				String getQuestionInformation = "SELECT * FROM tblquestion WHERE questionid = " + Integer.toString(questionid) + ";";
+				
+				Statement statementForQuestions = null;
+				
+				statementForQuestions = con.createStatement();
+				
+				ResultSet questionsData = statementForQuestions.executeQuery(getQuestionInformation);
+				
+				while(questionsData.next()) {
+					
+					Question newQuestion = new Question();
+					
+					newQuestion.setQuestionScore(-1);
+					
+					newQuestion.setQuestion(questionsData.getString("question"));
+					
+					int questionTypeId = questionsData.getInt("questiontypeid");
+					
+					String getQuestionTypeInformation = "SELECT * FROM tblquestiontype WHERE questiontypeid = " + Integer.toString(questionTypeId) + ";";
+					
+					Statement statementForQuestionTypes = null;
+					
+					statementForQuestionTypes = con.createStatement();
+					
+					ResultSet questionTypesData = statementForQuestionTypes.executeQuery(getQuestionTypeInformation);
+					
+					while(questionTypesData.next()) {
+						
+						QuestionType newQuestionType = new QuestionType();
+						
+						newQuestionType.setType(questionTypesData.getString("type"));
+						
+						newQuestionType.setNumberOfOptions(questionTypesData.getInt("numberofoptions"));
+						
+						newQuestionType.setDescription(questionTypesData.getString("description"));
+						
+						newQuestion.setTypeOfQuestion(newQuestionType);
+						
+					}
+					
+					questions.add(newQuestion);
+					
+				}
+				
+				surveyQuestionsToReturn.setSurvey(survey);
+				
+				surveyQuestionsToReturn.setQuestions(questions);
+				
+				surveyQuestionsToReturn.setTotalScore(0.0);
+				
+			}
+			
+		} catch(SQLException e) {
+			System.out.println("An error occured when finding survey information. " + e);
+		} finally {
+			if(con != null) {
+				try {
+					System.out.println("Closing connection...");
+					con.close();
+				} catch(SQLException e) {
+					
+				}
+			}
+			if(statement != null) {
+				try {
+					System.out.println("Closing statement...");
+					statement.close();
+				} catch(SQLException e) {
+					
+				}
+			}
+		}
+		
+		
+		return surveyQuestionsToReturn;
+		
+	}
+
+/*
+ **************************************************************   THE BELOW CLASS IS COMEPLETE GARBAGE   ************************************************************
+ * */
 	public static SurveyQuestions buildSurveyQuestionsObject(int id) {
 		
 		SurveyQuestions surveyQuestionsToReturn = new SurveyQuestions();
@@ -420,7 +591,6 @@ public class DatabaseConnection {
 			
 		} catch (SQLException e) {
 			System.out.println("Could not connect to the database. HERE");
-			
 		}
 		
 		try {
@@ -451,7 +621,7 @@ public class DatabaseConnection {
 					
 					String surveyName = results.getString("name");
 					
-					Survey survey = new Survey(surveyType, surveyName);
+					Survey survey = new Survey(0, surveyType, surveyName);
 					
 					surveyQuestionsToReturn.setSurvey(survey);
 					
@@ -476,12 +646,6 @@ public class DatabaseConnection {
 					questionsInSurvey = getQuestions(arrayOfQuestionIds);
 					
 					surveyQuestionsToReturn.setQuestions(questionsInSurvey);
-					
-					/* Next, we need the number of questions */
-					
-					int questionNumber = questionsInSurvey.size();
-					
-					surveyQuestionsToReturn.setQuestionNumber(questionNumber);
 					
 					/* Last, we need the total score (we'll set it to 0 */
 					
@@ -639,13 +803,17 @@ public class DatabaseConnection {
 				
 				if(tempId == id) {
 					
-					String questionTypeName = results.getString("name");
+					String questionTypeType = results.getString("type");
 					
-					questionTypeToReturn.setName(questionTypeName);
+					questionTypeToReturn.setType(questionTypeType);
 					
 					String questionTypeDesc = results.getString("description");
 					
 					questionTypeToReturn.setDescription(questionTypeDesc);
+					
+					int numberOfOptions = results.getInt("numberofoptions");
+					
+					questionTypeToReturn.setNumberOfOptions(numberOfOptions);
 					
 				}
 				
@@ -707,9 +875,9 @@ public class DatabaseConnection {
 				
 				if(tempId == id) {
 					
-					String surveyTypeName = results.getString("name");
+					String surveyTypeType = results.getString("type");
 					
-					surveyTypeToReturn.setName(surveyTypeName);
+					surveyTypeToReturn.setType(surveyTypeType);
 					
 					String surveyTypeDesc = results.getString("description");
 					
