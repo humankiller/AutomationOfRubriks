@@ -7,48 +7,7 @@ import java.util.Arrays;
 
 public class DatabaseConnection {
 	
-	//public static Connection con;
-	
-	//public static Statement statement;
-	
 	public static void main(String[] args) throws SQLException {
-		
-		
-		//statement = establishConnection();
-		
-		/*
-		 * 1. Create ResultSet object to hold the results
-		 * 2. Call function executeQuery on Statement object and pass in SQL code:
-		 * 		a. "SELECT *" means select all
-		 * 		b. "FROM question_types" means from the table that you give it (in this case question_types)
-		 */
-		
-		/*
-	
-		ResultSet results = statement.executeQuery("SELECT * FROM question_types");
-		
-		while(results.next()) { // While there are more rows in the table...
-			
-			String data = results.getString(1);
-			System.out.println("Fetching data by column index for row " + results.getRow() + " : " + data);
-			
-			data = results.getString("name"); // call getString function w/ parameter "name" (column w/ data type string in database)
-			System.out.println("Fetching data by column name for row " + results.getRow() + " : " + data);
-			
-			data = results.getString("description"); // call getString function w/ parameter "description" (column w/ data type string in database)
-			System.out.println("Fetching data by column name for row " + results.getRow() + " : " + data);
-			
-			Date date = results.getDate("created"); // call getDate function w/ parameter "created" (column w/ data type timezone in database)
-			System.out.println("Fetching data by column name for row " + results.getRow() + " : " + date);
-			
-		}
-		
-		*/
-		
-		//int[] questionIDs = {3, 4, 5}; // TESTING
-		
-		//SurveyQuestions surveyQuestions = buildSurveyQuestionsObject(6); // TESTING
-		
 		
 	}
 	
@@ -66,16 +25,11 @@ public class DatabaseConnection {
 		Statement statement = null;
 		
 		try {
-			
 			con = DriverManager.getConnection("jdbc:postgresql://ec2-107-22-239-155.compute-1.amazonaws.com/daknuflimm0laj", "utufnbbozfaphi", "4a7b61f6d36d53dd87d281cc3786acbe2bdcaf7470f7368b46ac370c1c5dbd95");
-			
 			statement = con.createStatement(); // Create a "Statement" object to do operations on
-			
 			if(con != null) { // Error checking
 				System.out.println("Database Connected");
 			}
-			
-			
 		} catch (SQLException e) {
 			System.out.println("Could not connect to the database.");
 		}
@@ -103,7 +57,6 @@ public class DatabaseConnection {
 		} catch(SQLException e) {
 			System.out.println("Could not retrieve users from the database.");
 		} finally {
-			
 			if(con != null) {
 				try {
 					System.out.println("Closing connection...");
@@ -141,16 +94,11 @@ public class DatabaseConnection {
 		Statement statement = null;
 		
 		try {
-			
 			con = DriverManager.getConnection("jdbc:postgresql://ec2-107-22-239-155.compute-1.amazonaws.com/daknuflimm0laj", "utufnbbozfaphi", "4a7b61f6d36d53dd87d281cc3786acbe2bdcaf7470f7368b46ac370c1c5dbd95");
-			
 			statement = con.createStatement(); // Create a "Statement" object to do operations on
-			
 			if(con != null) { // Error checking
 				System.out.println("Database Connected");
 			}
-			
-			
 		} catch (SQLException e) {
 			System.out.println("Could not connect to the database.");
 			return false;
@@ -190,7 +138,6 @@ public class DatabaseConnection {
 			System.out.println("Could not add team to the database" + e);
 			return false;
 		} finally {
-			
 			if(con != null) {
 				try {
 					System.out.println("Closing connection...");
@@ -230,16 +177,11 @@ public class DatabaseConnection {
 		Statement statement = null;
 		
 		try {
-			
 			con = DriverManager.getConnection("jdbc:postgresql://ec2-107-22-239-155.compute-1.amazonaws.com/daknuflimm0laj", "utufnbbozfaphi", "4a7b61f6d36d53dd87d281cc3786acbe2bdcaf7470f7368b46ac370c1c5dbd95");
-			
 			statement = con.createStatement(); // Create a "Statement" object to do operations on
-			
 			if(con != null) { // Error checking
 				System.out.println("Database Connected");
 			}
-			
-			
 		} catch (SQLException e) {
 			System.out.println("Could not connect to the database.");
 			return false;
@@ -280,7 +222,6 @@ public class DatabaseConnection {
 		} catch(SQLException e) {
 			System.out.println("Could not edit team to the database" + e);
 		} finally {
-			
 			if(con != null) {
 				try {
 					System.out.println("Closing connection...");
@@ -319,16 +260,11 @@ public class DatabaseConnection {
 		Statement statement = null;
 		
 		try {
-			
 			con = DriverManager.getConnection("jdbc:postgresql://ec2-107-22-239-155.compute-1.amazonaws.com/daknuflimm0laj", "utufnbbozfaphi", "4a7b61f6d36d53dd87d281cc3786acbe2bdcaf7470f7368b46ac370c1c5dbd95");
-			
 			statement = con.createStatement(); // Create a "Statement" object to do operations on
-			
 			if(con != null) { // Error checking
 				System.out.println("Database Connected");
 			}
-			
-			
 		} catch (SQLException e) {
 			System.out.println("Could not connect to the database.");
 			return false;
@@ -361,7 +297,6 @@ public class DatabaseConnection {
 					return false;
 				}
 				
-				
 			} else { // A duplicate team was found
 				System.out.println("There was no team with that team name to delete in the database");
 			}
@@ -369,7 +304,6 @@ public class DatabaseConnection {
 		} catch(SQLException e) {
 			System.out.println("Could not delete team from the database" + e);
 		} finally {
-			
 			if(con != null) {
 				try {
 					System.out.println("Closing connection...");
@@ -417,18 +351,7 @@ public class DatabaseConnection {
 			System.out.println("Could not retrieve data from the database " + e.getMessage());
 			
 		}
-		
-		
-		/*
-		
-		if(con == null) {
-			
-			statement = establishConnection();
-			
-		}
-		
-		*/
-		
+	
 		try {
 			
 			/*
@@ -451,46 +374,28 @@ public class DatabaseConnection {
 				
 			}
 			
-			//con.close();
-			
-			
 		} catch (SQLException e) {
-			
 			System.out.println("Could not retrieve data from the database " + e.getMessage());
 		} finally {
-			
 			if(con != null) {
-				
 				try {
-					
 					System.out.println("Closing connection...");
-					
 					con.close();
-					
 				} catch(SQLException e) {
 					
 				}
-				
 			}
-			
 			if(statement != null) {
-				
 				try {
-					
 					System.out.println("Closing statement...");
-					
 					statement.close();
-					
 				} catch(SQLException e) {
 					
 				}
-				
 			}
-			
 		}
 		
 		return teamNames;
-		
 		
 	}
 	
@@ -517,16 +422,6 @@ public class DatabaseConnection {
 			System.out.println("Could not connect to the database. HERE");
 			
 		}
-		
-		/*
-		
-		if(con == null) {
-			
-			statement = establishConnection();
-			
-		}
-		
-		*/
 		
 		try {
 			
@@ -598,76 +493,28 @@ public class DatabaseConnection {
 				
 			}
 			
-			//con.close();
-			
 		} catch (SQLException e) {
-			
 			System.out.println("Could not retrieve data from the database " + e.getMessage());
-			
 		} finally {
-			
 			if(con != null) {
-				
 				try {
-					
 					System.out.println("Closing connection...");
-					
 					con.close();
-					
 				} catch(SQLException e) {
 					
 				}
-				
 			}
-			
 			if(statement != null) {
-				
 				try {
-					
 					System.out.println("Closing statement...");
-					
 					statement.close();
-					
 				} catch(SQLException e) {
 					
 				}
-				
 			}
-			
 		}
 		
 		return surveyQuestionsToReturn;
-		
-		//ResultSet results = statement.executeQuery("")
-		
-		
-	}
-	
-	
-	// A method that sets up the connection so that we can just call a function
-	public static Statement establishConnection() {
-		
-		Connection con = null;
-		
-		Statement statement = null;
-		
-		try {
-			
-			con = DriverManager.getConnection("jdbc:postgresql://ec2-107-22-239-155.compute-1.amazonaws.com/daknuflimm0laj", "utufnbbozfaphi", "4a7b61f6d36d53dd87d281cc3786acbe2bdcaf7470f7368b46ac370c1c5dbd95");
-			
-			statement = con.createStatement(); // Create a "Statement" object to do operations on
-			
-			if(con != null) { // Error checking
-				System.out.println("Database Connected");
-			}
-			
-			return statement;
-			
-		} catch (SQLException e) {
-			System.out.println("Could not connect to the database. HERE");
-			
-			return null;
-		}
 		
 	}
 	
@@ -680,30 +527,15 @@ public class DatabaseConnection {
 		Statement statement = null;
 		
 		try {
-			
 			con = DriverManager.getConnection("jdbc:postgresql://ec2-107-22-239-155.compute-1.amazonaws.com/daknuflimm0laj", "utufnbbozfaphi", "4a7b61f6d36d53dd87d281cc3786acbe2bdcaf7470f7368b46ac370c1c5dbd95");
-			
 			statement = con.createStatement(); // Create a "Statement" object to do operations on
-			
 			if(con != null) { // Error checking
 				System.out.println("Database Connected");
 			}
 			
-			
 		} catch (SQLException e) {
 			System.out.println("Could not connect to the database. HERE");
-			
 		}
-		
-		/*
-		
-		if(con == null) {
-			
-			statement = establishConnection();
-			
-		}
-		
-		*/
 		
 		try {
 			
@@ -755,37 +587,24 @@ public class DatabaseConnection {
 			System.out.println("QUESTION ERROR");
 			
 		} finally {
-			
 			if(con != null) {
-				
 				try {
-					
 					System.out.println("Closing connection...");
-					
 					con.close();
-					
 				} catch(SQLException e) {
 					
 				}
-				
 			}
-			
 			if(statement != null) {
-				
 				try {
-					
 					System.out.println("Closing statement...");
-					
 					statement.close();
-					
 				} catch(SQLException e) {
 					
 				}
-				
 			}
-			
 		}
-		
+
 		System.out.println("The questions have been returned.");
 		
 		return questions;
@@ -800,30 +619,14 @@ public class DatabaseConnection {
 		Statement statement = null;
 		
 		try {
-			
 			con = DriverManager.getConnection("jdbc:postgresql://ec2-107-22-239-155.compute-1.amazonaws.com/daknuflimm0laj", "utufnbbozfaphi", "4a7b61f6d36d53dd87d281cc3786acbe2bdcaf7470f7368b46ac370c1c5dbd95");
-			
 			statement = con.createStatement(); // Create a "Statement" object to do operations on
-			
 			if(con != null) { // Error checking
 				System.out.println("Database Connected");
 			}
-			
-			
 		} catch (SQLException e) {
 			System.out.println("Could not connect to the database. HERE");
-			
 		}
-		
-		/*
-		
-		if(con == null) {
-			
-			statement = establishConnection();
-			
-		}
-		
-		*/
 		
 		QuestionType questionTypeToReturn = new QuestionType();
 		
@@ -848,41 +651,25 @@ public class DatabaseConnection {
 				
 			}
 			
-			//con.close();
-			
 		} catch (SQLException e) {
 			System.out.println("QUESTION TYPE ERROR");
-			
 		} finally {
-			
 			if(con != null) {
-				
 				try {
-					
 					System.out.println("Closing connection...");
-					
 					con.close();
-					
 				} catch(SQLException e) {
 					
 				}
-				
 			}
-			
 			if(statement != null) {
-				
 				try {
-					
 					System.out.println("Closing statement...");
-					
 					statement.close();
-					
 				} catch(SQLException e) {
 					
 				}
-				
 			}
-			
 		}
 		
 		return questionTypeToReturn;
@@ -898,30 +685,14 @@ public class DatabaseConnection {
 		Statement statement = null;
 		
 		try {
-			
 			con = DriverManager.getConnection("jdbc:postgresql://ec2-107-22-239-155.compute-1.amazonaws.com/daknuflimm0laj", "utufnbbozfaphi", "4a7b61f6d36d53dd87d281cc3786acbe2bdcaf7470f7368b46ac370c1c5dbd95");
-			
 			statement = con.createStatement(); // Create a "Statement" object to do operations on
-			
 			if(con != null) { // Error checking
 				System.out.println("Database Connected");
 			}
-			
-			
 		} catch (SQLException e) {
 			System.out.println("Could not connect to the database. HERE");
-			
 		}
-		
-		/*
-		
-		if(con == null) {
-			
-			statement = establishConnection();
-			
-		}
-		
-		*/
 		
 		System.out.println("Im here3");
 		
@@ -948,41 +719,25 @@ public class DatabaseConnection {
 				
 			}
 			
-			//con.close();
-			
 		} catch (SQLException e) {
 			System.out.println("SURVEY TYPE ERROR");
-			
 		} finally {
-			
 			if(con != null) {
-				
 				try {
-					
 					System.out.println("Closing connection...");
-					
 					con.close();
-					
 				} catch(SQLException e) {
 					
 				}
-				
 			}
-			
 			if(statement != null) {
-				
 				try {
-					
 					System.out.println("Closing statement...");
-					
 					statement.close();
-					
 				} catch(SQLException e) {
 					
 				}
-				
 			}
-			
 		}
 		
 		return surveyTypeToReturn;
@@ -1005,19 +760,13 @@ public class DatabaseConnection {
 		Statement statement = null;
 		
 		try {
-			
 			con = DriverManager.getConnection("jdbc:postgresql://ec2-107-22-239-155.compute-1.amazonaws.com/daknuflimm0laj", "utufnbbozfaphi", "4a7b61f6d36d53dd87d281cc3786acbe2bdcaf7470f7368b46ac370c1c5dbd95");
-			
 			statement = con.createStatement(); // Create a "Statement" object to do operations on
-			
 			if(con != null) { // Error checking
 				System.out.println("Database Connected");
 			}
-			
-			
 		} catch (SQLException e) {
 			System.out.println("Could not connect to the database. HERE");
-			
 		}
 		
 		try {
@@ -1028,38 +777,22 @@ public class DatabaseConnection {
 			System.out.println("Could not connect to the database. HERE");
 			
 		} finally {
-			
 			if(con != null) {
-				
 				try {
-					
 					System.out.println("Closing connection...");
-					
 					con.close();
-					
 				} catch(SQLException e) {
 					
 				}
-				
 			}
-			
 			if(statement != null) {
-				
 				try {
-					
 					System.out.println("Closing statement...");
-					
 					statement.close();
-					
 				} catch(SQLException e) {
 					
 				}
-				
 			}
-			
 		}
-		
 	}
-		
 }
-	
