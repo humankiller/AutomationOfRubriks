@@ -15,13 +15,26 @@ import com.example.demo.Model.*;
 public class HomePage {
 	
 	private SurveyQuestions surveyQuestionsResults;
+	private Survey selectedSurvey = new Survey();
 	
 	@Autowired
 	private SurveyService surveyManageService;
 	
 	@PutMapping("/survey")
-	public SurveyQuestions surveyQuestionsToReturn(@RequestBody Survey selectedSurvey) {
-		return surveyManageService.getSurvey(selectedSurvey);
+	public ResponseEntity<Boolean> recieveSelectedSurvey(@RequestBody Survey selectedSurveyFromFrontend) {
+		selectedSurvey.setSurveyid(selectedSurveyFromFrontend.getSurveyid());
+		System.out.println("Here's the surveyid: " + Integer.toString(selectedSurvey.getSurveyid()));
+		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+	}
+	
+	@GetMapping("/survey")
+	public SurveyQuestions getSelectedSurvey() {
+		
+		SurveyQuestions surveyQuestionsToReturn = new SurveyQuestions();
+		
+		surveyQuestionsToReturn = surveyManageService.getSurvey(selectedSurvey.getSurveyid());
+		
+		return surveyQuestionsToReturn;
 	}
 	
 	@GetMapping("/teams")

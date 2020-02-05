@@ -45,11 +45,11 @@ public class SurveyService {
 	
 	
 	// test comment
-	public SurveyQuestions getSurvey(Survey selectedSurvey) {
+	public SurveyQuestions getSurvey(int surveyid) {
 		
 		SurveyQuestions surveyQuestionsFromDatabase = new SurveyQuestions();
 		
-		surveyQuestionsFromDatabase = dbconnect.buildSurveyQuestions(selectedSurvey.getSurveyid()); // HARDCODED FOR DEMO, BUT CAN TAKE IN ANY NUMBER
+		surveyQuestionsFromDatabase = dbconnect.buildSurveyQuestions(surveyid); // HARDCODED FOR DEMO, BUT CAN TAKE IN ANY NUMBER
 		
 		//return surveyQuestionsToReturn;
 		
