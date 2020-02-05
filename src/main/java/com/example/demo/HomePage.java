@@ -100,11 +100,4 @@ public class HomePage {
 		
 	}
 	
-	/*
-	@RequestMapping("/survey")
-	public String surveyPage() {
-		return "This is the Survey Page, where people will take the survey!";
-	}
-	*/
-	
 }
