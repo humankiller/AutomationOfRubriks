@@ -272,7 +272,7 @@ public class DatabaseConnection {
 		
 		// First, I must check if the team that is being deleted is in the database
 		
-		String checkForDuplicateTeam = "SELECT 1 FROM tblteams WHERE teamname = '" + teamNameToDelete + "'"; 
+		String checkForDuplicateTeam = "SELECT * FROM tblteams WHERE teamname = '" + teamNameToDelete + "'"; 
 		
 		try {
 			
@@ -281,8 +281,36 @@ public class DatabaseConnection {
 				
 				System.out.println("Found team to delete");
 				
+				int teamid = results.getInt("teamid");
+				
+				System.out.println("Team ID to delete: " + Integer.toString(teamid));
+				
 				try {
 					
+					// First, find TakenSurveys with that teamid
+					String findTakenSurveysDependentOnTeam = "SELECT * FROM tbltakensurvey WHERE teamsid = " + Integer.toString(teamid) + ";";
+					
+					Statement deleteStatement = null;
+					
+					deleteStatement = con.createStatement();
+					
+					ResultSet thingsToDelete = statement.executeQuery(findTakenSurveysDependentOnTeam);
+					
+					while(thingsToDelete.next()) {
+						
+						// For each TakenSurvey with that teamid, delete all answers with that takensurveyid
+						String deleteAnwersDepedentOnTakenSurvey = "DELETE FROM tblanswers WHERE takensurveyid = " + Integer.toString(thingsToDelete.getInt("takensurveyid")) + ";";
+						
+						deleteStatement.executeUpdate(deleteAnwersDepedentOnTakenSurvey);
+						
+					}
+					
+					// Then, delete all TakenSurveys with that teamid
+					String deleteTakenSurveysDependentOnTeam = "DELETE FROM tbltakensurvey WHERE teamsid = " + Integer.toString(teamid) + ";";
+					
+					deleteStatement.executeUpdate(deleteTakenSurveysDependentOnTeam);
+					
+					// Finally, delete the team
 					String deleteTeamSQL = "DELETE FROM tblteams WHERE teamname = '" + teamNameToDelete + "'";
 					
 					statement.executeUpdate(deleteTeamSQL);
