@@ -84,10 +84,6 @@ public class SurveyService {
 		return resultOfSurveyQuestions.getTotalScore();
 	}
 	
-	public void saveSelectedTeam(String selectedTeam) {
-		teamSelected = selectedTeam;
-	}
-	
 	public String printTeam() {
 		return teamSelected;
 	}

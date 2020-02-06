@@ -15,24 +15,16 @@ import com.example.demo.Model.*;
 public class HomePage {
 	
 	private SurveyQuestions surveyQuestionsResults;
-	private Survey selectedSurvey = new Survey();
 	
 	@Autowired
 	private SurveyService surveyManageService;
-	
-	@PutMapping("/survey")
-	public ResponseEntity<Boolean> recieveSelectedSurvey(@RequestBody Survey selectedSurveyFromFrontend) {
-		selectedSurvey.setSurveyid(selectedSurveyFromFrontend.getSurveyid());
-		System.out.println("Here's the surveyid: " + Integer.toString(selectedSurvey.getSurveyid()));
-		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
-	}
-	
-	@GetMapping("/survey")
-	public SurveyQuestions getSelectedSurvey() {
+
+	@GetMapping("/teamid={teamid}/surveyid={surveyid}/survey")
+	public SurveyQuestions getSelectedSurvey(@PathVariable("surveyid") int surveyid) {
 		
 		SurveyQuestions surveyQuestionsToReturn = new SurveyQuestions();
 		
-		surveyQuestionsToReturn = surveyManageService.getSurvey(selectedSurvey.getSurveyid());
+		surveyQuestionsToReturn = surveyManageService.getSurvey(surveyid);
 		
 		return surveyQuestionsToReturn;
 	}
@@ -42,7 +34,7 @@ public class HomePage {
 		return surveyManageService.findAllTeams();
 	}
 	
-	@PutMapping("/results")
+	@PutMapping("/teamid={teamid}/surveyid={surveyid}/results")
 	public ResponseEntity<SurveyQuestions> setScores(@RequestBody SurveyQuestions resultOfSurveyQuestions) {
 		
 		surveyQuestionsResults = resultOfSurveyQuestions;
@@ -54,15 +46,9 @@ public class HomePage {
 	}
 	
 	
-	@GetMapping("/results")
+	@GetMapping("teamid={teamid}/surveyid={surveyid}/results")
 	public double surveyResults() {
 		return surveyManageService.calculateScore(surveyQuestionsResults);
-	}
-	
-	@PutMapping("/teamselect")
-	public ResponseEntity<String> test(@RequestBody String selectedTeam) {
-		surveyManageService.saveSelectedTeam(selectedTeam);
-		return new ResponseEntity<String>(selectedTeam, HttpStatus.OK);
 	}
 	
 	@GetMapping("/teamselected")
@@ -80,7 +66,7 @@ public class HomePage {
 		return surveyManageService.getUsers();
 	}
 	
-	@GetMapping("/surveys")
+	@GetMapping("/teamid={teamid}/surveys")
 	public List<Survey> surveysToReturn() {
 		return surveyManageService.getSurveys();
 	}
