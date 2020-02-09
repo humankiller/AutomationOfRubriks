@@ -299,7 +299,7 @@ public class DatabaseConnection {
 					while(thingsToDelete.next()) {
 						
 						// For each TakenSurvey with that teamid, delete all answers with that takensurveyid
-						String deleteAnwersDepedentOnTakenSurvey = "DELETE FROM tblanswers WHERE takensurveyid = " + Integer.toString(thingsToDelete.getInt("takensurveyid")) + ";";
+						String deleteAnwersDepedentOnTakenSurvey = "DELETE FROM tblanswer WHERE takensurveyid = " + Integer.toString(thingsToDelete.getInt("takensurveyid")) + ";";
 						
 						deleteStatement.executeUpdate(deleteAnwersDepedentOnTakenSurvey);
 						
@@ -533,6 +533,8 @@ public class DatabaseConnection {
 					
 					newQuestion.setQuestion(questionsData.getString("question"));
 					
+					newQuestion.setQuestionid(questionsData.getInt("questionid"));
+					
 					int questionTypeId = questionsData.getInt("questiontypeid");
 					
 					String getQuestionTypeInformation = "SELECT * FROM tblquestiontype WHERE questiontypeid = " + Integer.toString(questionTypeId) + ";";
@@ -658,6 +660,78 @@ public class DatabaseConnection {
 		}
 		
 		return surveys;
+		
+	}
+	
+	public boolean saveSurveyResults(int teamid, int surveyid, SurveyQuestions resultsOfSurveyQuestions) {
+		
+		Connection con = null;
+		
+		Statement statement = null;
+		
+		try {
+			con = DriverManager.getConnection("jdbc:postgresql://ec2-107-22-239-155.compute-1.amazonaws.com/daknuflimm0laj", "utufnbbozfaphi", "4a7b61f6d36d53dd87d281cc3786acbe2bdcaf7470f7368b46ac370c1c5dbd95");
+			statement = con.createStatement(); // Create a "Statement" object to do operations on
+			if(con != null) { // Error checking
+				System.out.println("Database Connected");
+			}
+		} catch (SQLException e) {
+			System.out.println("Could not connect to the database. HERE");
+		}
+		
+		String addTakenSurveyToDatabase = "INSERT INTO tbltakensurvey (surveyid, teamsid, score) VALUES (" + Integer.toString(surveyid) + ", " + Integer.toString(teamid) + ", " + Double.toString(resultsOfSurveyQuestions.getTotalScore()) + ");";
+		
+		try {
+			
+			statement.executeUpdate(addTakenSurveyToDatabase);
+			
+			int takensurveyid = 0;
+			
+			String findCorrectTakenSurveyID = "SELECT * FROM tbltakensurvey";
+			
+			ResultSet takenSurveys = statement.executeQuery(findCorrectTakenSurveyID);
+			
+			while(takenSurveys.next()) {
+				
+				if(takenSurveys.isLast()) {
+					
+					takensurveyid = takenSurveys.getInt("takensurveyid");
+					
+					System.out.println("This is the last id in the takensurvey table: " + Integer.toString(takensurveyid));
+					
+					Statement statementForAnswers = null;
+					
+					statementForAnswers = con.createStatement();
+					
+					List<Question> questionsToAdd = new ArrayList<>();
+					
+					questionsToAdd = resultsOfSurveyQuestions.getQuestions();
+					
+					for(int i = 0; i < questionsToAdd.size(); i++) {
+						
+						Question question = questionsToAdd.get(i);
+						
+						int questionid = question.getQuestionid();
+						
+						int questionScore = question.getQuestionScore();
+						
+						String addAnswerToDatabase = "INSERT INTO tblanswer (takensurveyid, questionid, answer) VALUES(" + Integer.toString(takensurveyid) + ", " + Integer.toString(questionid) + ", " + Integer.toString(questionScore) + ");";
+						
+						statementForAnswers.executeUpdate(addAnswerToDatabase);
+						
+					}
+					
+					return true;
+					
+				}
+				
+			}
+			
+		} catch(SQLException e) {
+			System.out.println("Could not save survey scores. " + e);
+		}
+		
+		return false;
 		
 	}
 	

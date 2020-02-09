@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @JsonSerialize
 public class Question {
 	
+	private int questionid;
 	private QuestionType typeOfQuestion; // This is the type of question that the question is (i.e. 5 point type)
 	private String question; // This is the actual question
 	private int questionScore; // This is the score that the user gives for that question(Default value will be -1)
@@ -26,10 +27,18 @@ public class Question {
 	
 	// Need getter methods to expose API on port 8081
 	
+	public int getQuestionid() {
+		return questionid;
+	}
+
+	public void setQuestionid(int questionid) {
+		this.questionid = questionid;
+	}
+	
 	public String getQuestion() {
 		return question;
 	}
-	
+
 	public int getQuestionScore() {
 		return questionScore;
 	}

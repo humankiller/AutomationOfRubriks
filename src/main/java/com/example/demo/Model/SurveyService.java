@@ -66,14 +66,11 @@ public class SurveyService {
 		
 	}
 	
-	public void saveScores(SurveyQuestions resultsOfSurveyQuestions) {
+	public boolean saveScores(int teamid, int surveyid, SurveyQuestions resultsOfSurveyQuestions) {
 		
-		/*
-		for(int i = 0; i < questionScores.size(); i++) {
-			questions.get(i).setQuestionScore(questionScores.get(i));
-		}
+		boolean saveScoreStatus = dbconnect.saveSurveyResults(teamid, surveyid, resultsOfSurveyQuestions);
 		
-		*/
+		return saveScoreStatus;
 		
 		//dbconnect.saveSurveyQuestionsResults(resultsOfSurveyQuestions);
 	}

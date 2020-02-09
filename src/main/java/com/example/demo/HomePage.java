@@ -34,15 +34,15 @@ public class HomePage {
 		return surveyManageService.findAllTeams();
 	}
 	
-	@PutMapping("/teamid={teamid}/surveyid={surveyid}/results")
-	public ResponseEntity<SurveyQuestions> setScores(@RequestBody SurveyQuestions resultOfSurveyQuestions) {
+	@PostMapping("/teamid={teamid}/surveyid={surveyid}/results")
+	public ResponseEntity<Boolean> setScores(@PathVariable("teamid") int teamid, @PathVariable("surveyid") int surveyid, @RequestBody SurveyQuestions resultOfSurveyQuestions) {
 		
 		surveyQuestionsResults = resultOfSurveyQuestions;
 		
-		surveyManageService.saveScores(resultOfSurveyQuestions);
+		boolean saveScoresStatus = surveyManageService.saveScores(teamid, surveyid, resultOfSurveyQuestions);
 		surveyManageService.calculateScore(resultOfSurveyQuestions);
 		
-		return new ResponseEntity<SurveyQuestions>(resultOfSurveyQuestions, HttpStatus.OK);
+		return new ResponseEntity<Boolean>(saveScoresStatus, HttpStatus.OK);
 	}
 	
 	
