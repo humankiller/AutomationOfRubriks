@@ -125,5 +125,12 @@ public class SurveyService {
 		return surveys;
 		
 	}
+	
+	public ReportOptions fetchReportOptions() {
+		
+		ReportOptions returnReportOptions = dbconnect.fetchReportOptions();
+		
+		return returnReportOptions;
+	}
 
 }

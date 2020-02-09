@@ -93,7 +93,14 @@ public class HomePage {
 		Boolean deleteStatus = surveyManageService.deleteTeam(teamNameToDelete);
 		
 		return new ResponseEntity<Boolean>(deleteStatus, HttpStatus.OK);
+	}
+	
+	@GetMapping("/admin/reportoptions")
+	public ResponseEntity<ReportOptions> fetchReportOptions() {
 		
+		ReportOptions returnReportOptions = surveyManageService.fetchReportOptions();
+		
+		return new ResponseEntity<ReportOptions>(returnReportOptions, HttpStatus.OK);
 	}
 	
 }

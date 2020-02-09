@@ -769,4 +769,116 @@ public class DatabaseConnection {
 		
 	}
 	
+	public ReportOptions fetchReportOptions() {
+		
+		ReportOptions returnReportOptions = new ReportOptions();
+		
+		List<Team> teams = new ArrayList<>();
+		
+		List<Survey> surveys = new ArrayList<>();
+		
+		Connection con = null;
+		
+		Statement statement = null;
+		
+		try {
+			
+			con = DriverManager.getConnection("jdbc:postgresql://ec2-107-22-239-155.compute-1.amazonaws.com/daknuflimm0laj", "utufnbbozfaphi", "4a7b61f6d36d53dd87d281cc3786acbe2bdcaf7470f7368b46ac370c1c5dbd95");
+			
+			statement = con.createStatement(); // Create a "Statement" object to do operations on
+			
+			if(con != null) { // Error checking
+				System.out.println("Database Connected");
+			}
+			
+			
+		} catch (SQLException e) {
+			System.out.println("Could not retrieve data from the database " + e.getMessage());
+			
+		}
+	
+		try {
+	
+			ResultSet teamsData = statement.executeQuery("SELECT * FROM tblteams");
+			
+			while(teamsData.next()) { // While there are more rows in the table...
+				
+				int teamid = teamsData.getInt("teamid");
+				
+				String teamName = teamsData.getString("teamname"); // call getString function w/ parameter "name" (column w/ data type string in database)
+				
+				Team teamToAdd = new Team(teamid, teamName);
+				
+				teams.add(teamToAdd);
+				
+			}
+			
+			returnReportOptions.setTeams(teams);
+			
+			Statement statementForSurveys = con.createStatement();
+			
+			ResultSet surveysData = statement.executeQuery("SELECT * FROM tblsurvey");
+			
+			while(surveysData.next()) {
+				
+				Survey newSurvey = new Survey();
+				
+				newSurvey.setSurveyid(surveysData.getInt("surveyid"));
+				
+				newSurvey.setName(surveysData.getString("name"));
+				
+				int surveyTypeid = surveysData.getInt("surveytypeid");
+				
+				String findSurveyType = "SELECT * FROM tblsurveytype WHERE surveytypeid = " + Integer.toString(surveyTypeid) + ";";
+				
+				Statement statementForSurveyType = null;
+				
+				statementForSurveyType = con.createStatement();
+				
+				ResultSet surveyTypeData = statementForSurveyType.executeQuery(findSurveyType);
+				
+				SurveyType typeOfSurvey = new SurveyType();
+				
+				while(surveyTypeData.next()) {
+					
+					typeOfSurvey.setType(surveyTypeData.getString("type"));
+					
+					typeOfSurvey.setDescription(surveyTypeData.getString("description"));
+					
+				}
+				
+				newSurvey.setTypeOfSurvey(typeOfSurvey);
+				
+				surveys.add(newSurvey);
+				
+				returnReportOptions.setSurveys(surveys);
+				
+			}
+			
+			
+			
+		} catch (SQLException e) {
+			System.out.println("Could not retrieve data from the database " + e.getMessage());
+		} finally {
+			if(con != null) {
+				try {
+					System.out.println("Closing connection...");
+					con.close();
+				} catch(SQLException e) {
+					
+				}
+			}
+			if(statement != null) {
+				try {
+					System.out.println("Closing statement...");
+					statement.close();
+				} catch(SQLException e) {
+					
+				}
+			}
+		}
+		
+		return returnReportOptions;
+	}
+	
 }
