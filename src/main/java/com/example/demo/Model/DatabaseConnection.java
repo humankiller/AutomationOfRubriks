@@ -657,6 +657,23 @@ public class DatabaseConnection {
 			
 		} catch(SQLException e) {
 			System.out.println("Error when trying to get all of the surveys: " + e);
+		} finally {
+			if(con != null) {
+				try {
+					System.out.println("Closing connection...");
+					con.close();
+				} catch(SQLException e) {
+					
+				}
+			}
+			if(statementForSurveys != null) {
+				try {
+					System.out.println("Closing statement...");
+					statementForSurveys.close();
+				} catch(SQLException e) {
+					
+				}
+			}
 		}
 		
 		return surveys;
@@ -729,6 +746,23 @@ public class DatabaseConnection {
 			
 		} catch(SQLException e) {
 			System.out.println("Could not save survey scores. " + e);
+		} finally {
+			if(con != null) {
+				try {
+					System.out.println("Closing connection...");
+					con.close();
+				} catch(SQLException e) {
+					
+				}
+			}
+			if(statement != null) {
+				try {
+					System.out.println("Closing statement...");
+					statement.close();
+				} catch(SQLException e) {
+					
+				}
+			}
 		}
 		
 		return false;
