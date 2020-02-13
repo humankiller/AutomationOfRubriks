@@ -103,4 +103,15 @@ public class HomePage {
 		return new ResponseEntity<ReportOptions>(returnReportOptions, HttpStatus.OK);
 	}
 	
+	@GetMapping("/admin/teamid={teamid}/surveyid={surveyid}")
+	public ArrayList<SurveyQuestions> fetchReport(@PathVariable("teamid") int teamid, @PathVariable("surveyid") int surveyid) {
+		
+		ArrayList<SurveyQuestions> report = new ArrayList<>();
+		
+		report = surveyManageService.fetchReport(teamid, surveyid);
+		
+		return report;
+		
+	}
+	
 }

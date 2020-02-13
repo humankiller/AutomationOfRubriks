@@ -132,5 +132,13 @@ public class SurveyService {
 		
 		return returnReportOptions;
 	}
+	
+	public ArrayList<SurveyQuestions> fetchReport(int teamid, int surveyid) {
+		
+		ArrayList<SurveyQuestions> report = dbconnect.fetchReport(teamid, surveyid);
+		
+		return report;
+		
+	}
 
 }

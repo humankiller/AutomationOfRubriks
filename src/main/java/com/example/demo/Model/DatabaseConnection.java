@@ -881,4 +881,131 @@ public class DatabaseConnection {
 		return returnReportOptions;
 	}
 	
+	public ArrayList<SurveyQuestions> fetchReport(int teamid, int surveyid) {
+		
+		ArrayList<SurveyQuestions> report = new ArrayList<>();
+		
+		Connection con = null;
+		
+		Statement statement = null;
+		
+		try {
+			
+			con = DriverManager.getConnection("jdbc:postgresql://ec2-107-22-239-155.compute-1.amazonaws.com/daknuflimm0laj", "utufnbbozfaphi", "4a7b61f6d36d53dd87d281cc3786acbe2bdcaf7470f7368b46ac370c1c5dbd95");
+			
+			statement = con.createStatement(); // Create a "Statement" object to do operations on
+			
+			if(con != null) { // Error checking
+				System.out.println("Database Connected");
+			}
+			
+			
+		} catch (SQLException e) {
+			System.out.println("Could not retrieve data from the database " + e.getMessage());
+			
+		}
+		
+		// First, let's get the TakenSurvey information
+		
+		String queryTakenSurveyInformation = "SELECT * FROM tbltakensurvey WHERE teamsid = " + Integer.toString(teamid) + " AND surveyid = " + Integer.toString(surveyid) + ";";
+		
+		try {
+			
+			ResultSet takenSurveyInformation = statement.executeQuery(queryTakenSurveyInformation);
+			
+			while(takenSurveyInformation.next()) {
+				
+				SurveyQuestions takenSurvey = new SurveyQuestions();
+				
+				takenSurvey.setSurvey(null); // Don't need it in the frontend
+				
+				// Get the takensurveyid to be able to fetch the correct answers
+				
+				int takensurveyid = takenSurveyInformation.getInt("takensurveyid");
+				
+				double totalScore = takenSurveyInformation.getDouble("score");
+				
+				// Create answers array to hold answers in this TakenSurvey
+				
+				ArrayList<Question> answers = new ArrayList<>();
+				
+				// Must create a new statement to query answers
+				
+				Statement statementToFetchAnswers = con.createStatement();
+				
+				String queryAnswersInformation = "SELECT * FROM tblanswer WHERE takensurveyid = " + Integer.toString(takensurveyid) + ";";
+				
+				ResultSet answersInformation = statementToFetchAnswers.executeQuery(queryAnswersInformation);
+				
+				while(answersInformation.next()) {
+					
+					Question newAnswer = new Question();
+					
+					int answer = answersInformation.getInt("answer");
+					
+					// Get the questionid to be able to fetch the correct question
+					
+					int questionid = answersInformation.getInt("questionid");
+					
+					String getQuestionInformation = "SELECT * FROM tblquestion WHERE questionid = " + Integer.toString(questionid) + ";";
+					
+					Statement statementForQuestions = null;
+					
+					statementForQuestions = con.createStatement();
+					
+					ResultSet questionsData = statementForQuestions.executeQuery(getQuestionInformation);
+					
+					while(questionsData.next()) {
+						
+						newAnswer.setQuestionScore(answer);
+						
+						newAnswer.setQuestion(questionsData.getString("question"));
+						
+						newAnswer.setQuestionid(questionsData.getInt("questionid"));
+						
+						int questionTypeId = questionsData.getInt("questiontypeid");
+						
+						String getQuestionTypeInformation = "SELECT * FROM tblquestiontype WHERE questiontypeid = " + Integer.toString(questionTypeId) + ";";
+						
+						Statement statementForQuestionTypes = null;
+						
+						statementForQuestionTypes = con.createStatement();
+						
+						ResultSet questionTypesData = statementForQuestionTypes.executeQuery(getQuestionTypeInformation);
+						
+						while(questionTypesData.next()) {
+							
+							QuestionType newQuestionType = new QuestionType();
+							
+							newQuestionType.setType(questionTypesData.getString("type"));
+							
+							newQuestionType.setNumberOfOptions(questionTypesData.getInt("numberofoptions"));
+							
+							newQuestionType.setDescription(questionTypesData.getString("description"));
+							
+							newAnswer.setTypeOfQuestion(newQuestionType);
+							
+						}
+						
+					}
+					
+					answers.add(newAnswer);
+					
+				}
+				
+				takenSurvey.setQuestions(answers);
+				
+				takenSurvey.setTotalScore(totalScore);
+				
+				report.add(takenSurvey);
+				
+			}
+			
+		} catch(SQLException e) {
+			System.out.println("Could not fetch the report.  " + e);
+		}
+		
+		return report;
+	}
+	
 }
