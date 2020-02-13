@@ -1003,6 +1003,23 @@ public class DatabaseConnection {
 			
 		} catch(SQLException e) {
 			System.out.println("Could not fetch the report.  " + e);
+		}  finally {
+			if(con != null) {
+				try {
+					System.out.println("Closing connection...");
+					con.close();
+				} catch(SQLException e) {
+					
+				}
+			}
+			if(statement != null) {
+				try {
+					System.out.println("Closing statement...");
+					statement.close();
+				} catch(SQLException e) {
+					
+				}
+			}
 		}
 		
 		return report;
