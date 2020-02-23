@@ -66,6 +66,12 @@ public class HomePage {
 		return surveyManageService.getUsers();
 	}
 	
+	@GetMapping("/teamid={teamid}/surveytypes/showhidden={showHidden}")
+	public List<SurveyType> surveyTypesToReturn(@PathVariable("showHidden") boolean showHidden) {
+		System.out.println("I'm HERE!");
+		return surveyManageService.getSurveyTypes(showHidden);
+	}
+	
 	@GetMapping("/teamid={teamid}/surveys")
 	public List<Survey> surveysToReturn() {
 		return surveyManageService.getSurveys();

@@ -118,6 +118,16 @@ public class SurveyService {
 		return deleteStatus;
 	}
 	
+	public List<SurveyType> getSurveyTypes(boolean showHidden) {
+		
+		List<SurveyType> surveyTypes = new ArrayList<>();
+		
+		surveyTypes = dbconnect.getSurveyTypes(showHidden);
+		
+		return surveyTypes;
+		
+	}
+	
 	public List<Survey> getSurveys() {
 		
 		List<Survey> surveys = dbconnect.getSurveys();

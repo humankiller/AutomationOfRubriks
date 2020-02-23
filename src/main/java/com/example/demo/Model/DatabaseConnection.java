@@ -597,6 +597,73 @@ public class DatabaseConnection {
 		
 	}
 	
+	public static List<SurveyType> getSurveyTypes(boolean showHidden) {
+		
+		List<SurveyType> surveyTypes = new ArrayList<>();
+		
+		Connection con = null;
+		
+		Statement statementForSurveyTypes = null;
+		
+		try {
+			con = DriverManager.getConnection("jdbc:postgresql://ec2-107-22-239-155.compute-1.amazonaws.com/daknuflimm0laj", "utufnbbozfaphi", "4a7b61f6d36d53dd87d281cc3786acbe2bdcaf7470f7368b46ac370c1c5dbd95");
+			statementForSurveyTypes = con.createStatement(); // Create a "Statement" object to do operations on
+			if(con != null) { // Error checking
+				System.out.println("Database Connected");
+			}
+		} catch (SQLException e) {
+			System.out.println("Could not connect to the database. HERE");
+		}
+		
+		String findAllSurveyTypes = "";
+		
+		if(showHidden == true) {
+			findAllSurveyTypes = "SELECT * FROM tblsurveytype"; 
+		} else {
+			findAllSurveyTypes = "SELECT * FROM tblsurveytype WHERE active";
+		}
+		
+		try {
+			
+			ResultSet surveyTypesData = statementForSurveyTypes.executeQuery(findAllSurveyTypes);
+			
+			while(surveyTypesData.next()) {
+				
+				SurveyType newSurveyType = new SurveyType();
+				
+				newSurveyType.setType(surveyTypesData.getString("type"));
+				
+				newSurveyType.setDescription(surveyTypesData.getString("description"));
+				
+				surveyTypes.add(newSurveyType);
+				
+			}
+			
+		} catch(SQLException e) {
+			System.out.println("Could not fetch survey type.  " + e);
+		} finally {
+			if(con != null) {
+				try {
+					System.out.println("Closing connection...");
+					con.close();
+				} catch(SQLException e) {
+					
+				}
+			}
+			if(statementForSurveyTypes != null) {
+				try {
+					System.out.println("Closing statement...");
+					statementForSurveyTypes.close();
+				} catch(SQLException e) {
+					
+				}
+			}
+		}
+		
+		return surveyTypes;
+		
+	}
+	
 	public static List<Survey> getSurveys() {
 		
 		List<Survey> surveys = new ArrayList<>();
