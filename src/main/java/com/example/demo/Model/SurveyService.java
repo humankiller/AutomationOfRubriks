@@ -128,9 +128,9 @@ public class SurveyService {
 		
 	}
 	
-	public List<Survey> getSurveys() {
+	public List<Survey> getSurveys(int surveytypeid) {
 		
-		List<Survey> surveys = dbconnect.getSurveys();
+		List<Survey> surveys = dbconnect.getSurveys(surveytypeid);
 		
 		return surveys;
 		

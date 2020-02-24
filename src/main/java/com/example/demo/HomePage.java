@@ -72,9 +72,9 @@ public class HomePage {
 		return surveyManageService.getSurveyTypes(showHidden);
 	}
 	
-	@GetMapping("/teamid={teamid}/surveys")
-	public List<Survey> surveysToReturn() {
-		return surveyManageService.getSurveys();
+	@GetMapping("/teamid={teamid}/surveytypeid={surveytypeid}/surveys")
+	public List<Survey> surveysToReturn(@PathVariable("surveytypeid") int surveytypeid) {
+		return surveyManageService.getSurveys(surveytypeid);
 	}
 	
 	@PostMapping("/addteam")

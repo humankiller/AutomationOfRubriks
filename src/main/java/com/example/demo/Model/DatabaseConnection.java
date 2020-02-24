@@ -668,7 +668,7 @@ public class DatabaseConnection {
 		
 	}
 	
-	public static List<Survey> getSurveys() {
+	public static List<Survey> getSurveys(int surveytypeid) {
 		
 		List<Survey> surveys = new ArrayList<>();
 		
@@ -686,7 +686,13 @@ public class DatabaseConnection {
 			System.out.println("Could not connect to the database. HERE");
 		}
 		
-		String findAllSurveys = "SELECT * FROM tblsurvey";
+		String findAllSurveys = "";
+		
+		if(surveytypeid == 0) {
+			findAllSurveys = "SELECT * FROM tblsurvey";
+		} else {
+			findAllSurveys = "SELECT * FROM tblsurvey WHERE surveytypeid = " + Integer.toString(surveytypeid) + ";";
+		}
 		
 		try {
 			
