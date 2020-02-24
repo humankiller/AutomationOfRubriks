@@ -491,6 +491,8 @@ public class DatabaseConnection {
 				
 				while(surveyTypeData.next()) {
 					
+					typeOfSurvey.setSurveytypeid(surveyTypeData.getInt("surveytypeid"));
+					
 					typeOfSurvey.setType(surveyTypeData.getString("type"));
 					
 					typeOfSurvey.setDescription(surveyTypeData.getString("description"));
@@ -631,6 +633,8 @@ public class DatabaseConnection {
 				
 				SurveyType newSurveyType = new SurveyType();
 				
+				newSurveyType.setSurveytypeid(surveyTypesData.getInt("surveytypeid"));
+				
 				newSurveyType.setType(surveyTypesData.getString("type"));
 				
 				newSurveyType.setDescription(surveyTypesData.getString("description"));
@@ -709,6 +713,8 @@ public class DatabaseConnection {
 				SurveyType typeOfSurvey = new SurveyType();
 				
 				while(surveyTypeData.next()) {
+					
+					typeOfSurvey.setSurveytypeid(surveyTypeData.getInt("surveytypeid"));
 					
 					typeOfSurvey.setType(surveyTypeData.getString("type"));
 					
@@ -907,6 +913,8 @@ public class DatabaseConnection {
 				SurveyType typeOfSurvey = new SurveyType();
 				
 				while(surveyTypeData.next()) {
+					
+					typeOfSurvey.setSurveytypeid(surveyTypeData.getInt("surveytypeid"));
 					
 					typeOfSurvey.setType(surveyTypeData.getString("type"));
 					
