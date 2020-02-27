@@ -471,17 +471,19 @@ public class DatabaseConnection {
 			
 			ResultSet surveyData = statement.executeQuery(searchForSurvey);
 			
+			int surveytypeid = 0;
+			
 			while(surveyData.next()) {
 				
 				survey.setSurveyid(surveyData.getInt("surveyid"));
 				
 				survey.setName(surveyData.getString("name"));
 				
-				int surveyTypeKey = surveyData.getInt("surveytypeid");
+				surveytypeid = surveyData.getInt("surveytypeid");
 				
-				System.out.println("Here is the surveyTypeId: " + Integer.toString(surveyTypeKey));
+				System.out.println("Here is the surveyTypeId: " + Integer.toString(surveytypeid));
 					
-				String searchForSurveyType = "SELECT * FROM tblsurveytype WHERE surveytypeid = " + Integer.toString(surveyTypeKey) + ";";
+				String searchForSurveyType = "SELECT * FROM tblsurveytype WHERE surveytypeid = " + Integer.toString(surveytypeid) + ";";
 				
 				Statement statementForSurveyType = null;
 				
@@ -505,7 +507,7 @@ public class DatabaseConnection {
 			
 			// Next, lets build the array of questions
 			
-			String findQuestionsInSurvey = "SELECT * FROM tblquestioninsurvey WHERE surveyid = " + Integer.toString(survey.getSurveyid()) + ";";
+			String findQuestionsInSurvey = "SELECT * FROM tblquestioninsurvey WHERE surveytypeid = " + Integer.toString(surveytypeid) + ";";
 			
 			Statement statementForQuestionsInSurvey = null;
 			
