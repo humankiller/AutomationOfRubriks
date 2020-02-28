@@ -72,6 +72,14 @@ public class HomePage {
 	//public boolean adminLogin(@RequestBody ) {
 		
 	//}
+	
+	@GetMapping("/admin/login/username={username}/password={password}")
+	public ResponseEntity<Boolean> login(@PathVariable("username") String username, @PathVariable("password") String password) {
+		
+		Boolean confirmedLogin = surveyManageService.verifyAdminLogin(username, password);
+		
+		return new ResponseEntity<Boolean>(confirmedLogin, HttpStatus.OK);
+	}
 
 	@GetMapping("/teamid={teamid}/surveytypes/showhidden={showHidden}")
 	public List<SurveyType> surveyTypesToReturn(@PathVariable("showHidden") boolean showHidden) {

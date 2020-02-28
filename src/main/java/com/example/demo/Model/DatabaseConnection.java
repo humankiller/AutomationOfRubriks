@@ -1142,7 +1142,7 @@ public class DatabaseConnection {
 			 * 		a. "SELECT *" means select all
 			 * 		b. "FROM question_types" means from the table that you give it (in this case question_types)
 			 */
-			ResultSet results = statement.executeQuery("SELECT * FROM tblusers");
+			ResultSet results = statement.executeQuery("SELECT * FROM tblusers;");
 			
 			while(results.next()) { // While there are more rows in the table...
 				
