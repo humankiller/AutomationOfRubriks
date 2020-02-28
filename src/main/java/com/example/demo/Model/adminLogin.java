@@ -11,7 +11,6 @@ public class adminLogin {
 	private String password;
 	private boolean admin;
 
-	
 	public void setUsername(String username) {
 		this.username = username;
 	}
