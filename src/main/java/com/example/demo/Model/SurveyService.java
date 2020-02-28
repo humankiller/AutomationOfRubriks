@@ -151,4 +151,14 @@ public class SurveyService {
 		
 	}
 
+	public boolean verifyAdminLogin(String userName, String password) {
+		
+		//List<Team> teamNames = new ArrayList<>();
+		
+		boolean isAdmin = dbconnect.verifyAdmin(userName, password);
+		
+		return isAdmin;
+		
+	}
+
 }

@@ -66,6 +66,13 @@ public class HomePage {
 		return surveyManageService.getUsers();
 	}
 	
+	// TODO finish implementing the admin login
+	
+	//@PutMapping("/admin/login")
+	//public boolean adminLogin(@RequestBody ) {
+		
+	//}
+
 	@GetMapping("/teamid={teamid}/surveytypes/showhidden={showHidden}")
 	public List<SurveyType> surveyTypesToReturn(@PathVariable("showHidden") boolean showHidden) {
 		System.out.println("I'm HERE!");
