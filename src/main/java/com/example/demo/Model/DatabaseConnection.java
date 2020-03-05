@@ -1369,4 +1369,104 @@ public class DatabaseConnection {
 		return questions;
 		
 	}
+	
+	public boolean createTemplate(Template template) {
+		
+		boolean createTemplateStatus = false;
+		
+		String type = template.getTypeOfSurvey().getType();
+		
+		String description = template.getTypeOfSurvey().getDescription();
+		
+		Connection con = null;
+		
+		Statement statement = null;
+		
+		try {
+			
+			con = DriverManager.getConnection("jdbc:postgresql://ec2-107-22-239-155.compute-1.amazonaws.com/daknuflimm0laj", "utufnbbozfaphi", "4a7b61f6d36d53dd87d281cc3786acbe2bdcaf7470f7368b46ac370c1c5dbd95");
+			
+			statement = con.createStatement(); // Create a "Statement" object to do operations on
+			
+			if(con != null) { // Error checking
+				System.out.println("Database Connected");
+			}
+			
+			
+		} catch (SQLException e) {
+			System.out.println("Could not retrieve data from the database " + e.getMessage());
+			
+		}
+		
+		String checkDuplicateSQL = "SELECT * FROM tblsurveytype WHERE type = '" + template.getTypeOfSurvey().getType() + "';";
+		
+		try {
+			
+			ResultSet checkDuplicate = statement.executeQuery(checkDuplicateSQL);
+			
+			if(checkDuplicate.next() == false) { // No duplicates were found in the database
+				
+				System.out.println("Good to insert survey type");
+				
+				Statement surveyTypeStatement = con.createStatement();
+				
+				String insertSurveyTypeSQL = "INSERT INTO tblsurveytype (type, description) VALUES('" + type + "', '" + description + "');";
+				
+				surveyTypeStatement.executeUpdate(insertSurveyTypeSQL);
+				
+				surveyTypeStatement.close();
+				
+				// Now find the surveytypeid of the surveytype that was just inserted
+				
+				Statement findSurveyTypeIDStatement = con.createStatement();
+				
+				String findSurveyTypeIDSQL = "SELECT * FROM tblsurveytype WHERE type = '" + type + "';";
+				
+				ResultSet findSurveyTypeIDData = findSurveyTypeIDStatement.executeQuery(findSurveyTypeIDSQL);
+				
+				while(findSurveyTypeIDData.next()) {
+					
+					int surveytypeid = findSurveyTypeIDData.getInt("surveytypeid");
+					
+					Statement linkStatement = con.createStatement();
+					
+					for(int i = 0; i < template.getQuestions().size(); i++) {
+						
+						int questionIDToLink = template.getQuestions().get(i).getQuestionid();
+						
+						String linkQuestionsToSurveyTypeSQL = "INSERT INTO tblquestioninsurvey (surveytypeid, questionid) VALUES(" + Integer.toString(surveytypeid) + " , " + Integer.toString(questionIDToLink) + ");";
+						
+						linkStatement.executeUpdate(linkQuestionsToSurveyTypeSQL);
+						
+					}
+					
+				}
+				
+				createTemplateStatus = true;
+				
+			}
+			
+		} catch(SQLException e) {
+			System.out.println("Could not insert template into database " + e.getMessage());
+		} finally {
+			if(con != null) {
+				try {
+					System.out.println("Closing connection...");
+					con.close();
+				} catch(SQLException e) {
+					
+				}
+			}
+			if(statement != null) {
+				try {
+					System.out.println("Closing statement...");
+					statement.close();
+				} catch(SQLException e) {
+					
+				}
+			}
+		}
+		
+		return createTemplateStatus;
+	}
 }

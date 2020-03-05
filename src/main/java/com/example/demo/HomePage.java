@@ -151,4 +151,12 @@ public class HomePage {
 		return questions;
 	}
 	
+	@PostMapping("/admin/createtemplate")
+	public ResponseEntity<Boolean> createTemplate(@RequestBody Template template) {
+		
+		Boolean createTemplateStatus = surveyManageService.createTemplate(template);
+		
+		return new ResponseEntity<Boolean>(createTemplateStatus, HttpStatus.OK);
+	}
+	
 }

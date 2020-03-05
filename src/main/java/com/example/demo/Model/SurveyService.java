@@ -174,5 +174,12 @@ public class SurveyService {
 		
 		return questions;
 	}
+	
+	public boolean createTemplate(Template template) {
+		
+		boolean createTemplateStatus = dbconnect.createTemplate(template);
+		
+		return createTemplateStatus;
+	}
 
 }
