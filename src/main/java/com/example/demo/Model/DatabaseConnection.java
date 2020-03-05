@@ -1276,4 +1276,97 @@ public class DatabaseConnection {
 		
 		return questiontypes;
 	}
+	
+	public ArrayList<Question> getQuestionsWithTypeQuestionID(int questiontypeid) {
+		
+		ArrayList<Question> questions = new ArrayList<>();
+		
+		QuestionType selectedQuestionType = new QuestionType();
+		
+		Connection con = null;
+		
+		Statement statement = null;
+		
+		try {
+			
+			con = DriverManager.getConnection("jdbc:postgresql://ec2-107-22-239-155.compute-1.amazonaws.com/daknuflimm0laj", "utufnbbozfaphi", "4a7b61f6d36d53dd87d281cc3786acbe2bdcaf7470f7368b46ac370c1c5dbd95");
+			
+			statement = con.createStatement(); // Create a "Statement" object to do operations on
+			
+			if(con != null) { // Error checking
+				System.out.println("Database Connected");
+			}
+			
+			
+		} catch (SQLException e) {
+			System.out.println("Could not retrieve data from the database " + e.getMessage());
+			
+		}
+		
+		String fetchQuestionTypeData = "SELECT * FROM tblquestiontype WHERE questiontypeid = " + Integer.toString(questiontypeid) + ";";
+		
+		try {
+			
+			ResultSet questionTypesData = statement.executeQuery(fetchQuestionTypeData);
+			
+			while(questionTypesData.next()) {
+				
+				selectedQuestionType.setQuestiontypeid(questionTypesData.getInt("questiontypeid"));
+				
+				selectedQuestionType.setType(questionTypesData.getString("type"));
+				
+				selectedQuestionType.setNumberOfOptions(questionTypesData.getInt("numberofoptions"));
+				
+				selectedQuestionType.setDescription(questionTypesData.getString("description"));
+				
+			}
+			
+			// Now get all of the questions with that specific question type from the database
+			
+			String fetchQuestionsWithMatchingQuestionID = "SELECT * FROM tblquestion WHERE questiontypeid = " + Integer.toString(questiontypeid) + ";";
+			
+			Statement questionsStatement = con.createStatement();
+			
+			ResultSet questionsData = questionsStatement.executeQuery(fetchQuestionsWithMatchingQuestionID);
+			
+			while(questionsData.next()) {
+				
+				Question newQuestion = new Question();
+				
+				newQuestion.setTypeOfQuestion(selectedQuestionType);
+				
+				newQuestion.setQuestionid(questionsData.getInt("questionid"));
+				
+				newQuestion.setQuestion(questionsData.getString("question"));
+				
+				newQuestion.setQuestionScore(-1);
+				
+				questions.add(newQuestion);
+				
+			}
+			
+		} catch(SQLException e) {
+			System.out.println("Could not retrieve questions from the database " + e.getMessage());
+		} finally {
+			if(con != null) {
+				try {
+					System.out.println("Closing connection...");
+					con.close();
+				} catch(SQLException e) {
+					
+				}
+			}
+			if(statement != null) {
+				try {
+					System.out.println("Closing statement...");
+					statement.close();
+				} catch(SQLException e) {
+					
+				}
+			}
+		}
+		
+		return questions;
+		
+	}
 }

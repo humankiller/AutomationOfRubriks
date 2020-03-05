@@ -167,5 +167,12 @@ public class SurveyService {
 		
 		return questiontypes;
 	}
+	
+	public ArrayList<Question> getQuestionsWithQuestionTypeID(int questiontypeid) {
+		
+		ArrayList<Question> questions = dbconnect.getQuestionsWithTypeQuestionID(questiontypeid);
+		
+		return questions;
+	}
 
 }

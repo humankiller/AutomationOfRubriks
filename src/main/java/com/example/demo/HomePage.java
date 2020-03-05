@@ -143,4 +143,12 @@ public class HomePage {
 		return questiontypes;
 	}
 	
+	@GetMapping("/admin/createtemplate/getquestions/questiontypeid={questiontypeid}")
+	public ArrayList<Question> getQuestionsWithQuestionTypeID(@PathVariable("questiontypeid") int questiontypeid) {
+		
+		ArrayList<Question> questions = surveyManageService.getQuestionsWithQuestionTypeID(questiontypeid);
+		
+		return questions;
+	}
+	
 }
