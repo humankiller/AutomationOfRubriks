@@ -14,24 +14,24 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @JsonSerialize
 public class Template {
 	
-	private SurveyType surveytype;
+	private SurveyType typeOfSurvey;
 	private List<Question> questions;
 	
 	public Template() {
 		
 	}
 	
-	public Template(SurveyType surveytype, List<Question> questions) {
-		this.surveytype = surveytype;
+	public Template(SurveyType typeOfSurvey, List<Question> questions) {
+		this.typeOfSurvey = typeOfSurvey;
 		this.questions = questions;
 	}
 
-	public SurveyType getSurveytype() {
-		return surveytype;
+	public SurveyType getTypeOfSurvey() {
+		return typeOfSurvey;
 	}
 
-	public void setSurveytype(SurveyType surveytype) {
-		this.surveytype = surveytype;
+	public void setTypeOfSurvey(SurveyType typeOfSurvey) {
+		this.typeOfSurvey = typeOfSurvey;
 	}
 
 	public List<Question> getQuestions() {
