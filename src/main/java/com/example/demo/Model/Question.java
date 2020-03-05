@@ -19,7 +19,8 @@ public class Question {
 	}
 	
 	// Need an overloaded constructor to set elements
-	public Question(QuestionType typeOfQuestion, String ques, int quesScore) {
+	public Question(int questionid, QuestionType typeOfQuestion, String ques, int quesScore) {
+		this.questionid = questionid;
 		this.typeOfQuestion = typeOfQuestion;
 		this.question = ques;
 		this.questionScore = quesScore;
