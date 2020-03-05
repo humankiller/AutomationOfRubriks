@@ -1206,4 +1206,74 @@ public class DatabaseConnection {
 		
 		
 	}
+	
+	public ArrayList<QuestionType> getQuestionTypes() {
+		
+		ArrayList<QuestionType> questiontypes = new ArrayList<>();
+		
+		Connection con = null;
+		
+		Statement statement = null;
+		
+		try {
+			
+			con = DriverManager.getConnection("jdbc:postgresql://ec2-107-22-239-155.compute-1.amazonaws.com/daknuflimm0laj", "utufnbbozfaphi", "4a7b61f6d36d53dd87d281cc3786acbe2bdcaf7470f7368b46ac370c1c5dbd95");
+			
+			statement = con.createStatement(); // Create a "Statement" object to do operations on
+			
+			if(con != null) { // Error checking
+				System.out.println("Database Connected");
+			}
+			
+			
+		} catch (SQLException e) {
+			System.out.println("Could not retrieve data from the database " + e.getMessage());
+			
+		}
+		
+		String fetchQuestionTypes = "SELECT * FROM tblquestiontype;";
+		
+		try {
+			
+			ResultSet questionTypesData = statement.executeQuery(fetchQuestionTypes);
+			
+			while(questionTypesData.next()) {
+				
+				QuestionType newQuestionType = new QuestionType();
+				
+				newQuestionType.setQuestiontypeid(questionTypesData.getInt("questiontypeid"));
+				
+				newQuestionType.setType(questionTypesData.getString("type"));
+				
+				newQuestionType.setNumberOfOptions(questionTypesData.getInt("numberofoptions"));
+				
+				newQuestionType.setDescription(questionTypesData.getString("description"));
+				
+				questiontypes.add(newQuestionType);
+				
+			}
+			
+		} catch(SQLException e) {
+			System.out.println("Could not retrieve questiontypes from the database " + e.getMessage());
+		} finally {
+			if(con != null) {
+				try {
+					System.out.println("Closing connection...");
+					con.close();
+				} catch(SQLException e) {
+					
+				}
+			}
+			if(statement != null) {
+				try {
+					System.out.println("Closing statement...");
+					statement.close();
+				} catch(SQLException e) {
+					
+				}
+			}
+		}
+		
+		return questiontypes;
+	}
 }

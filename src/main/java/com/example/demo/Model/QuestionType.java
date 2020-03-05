@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @JsonSerialize
 public class QuestionType {
 	
+	private int questiontypeid;
 	private String type; // change this to "type" to match tblquestiontype
 	private String description;
 	private int numberOfOptions;
@@ -21,10 +22,19 @@ public class QuestionType {
 		
 	}
 	
-	public QuestionType(String type, String description, int numberOfOptions) {
+	public QuestionType(int questiontypeid, String type, String description, int numberOfOptions) {
+		this.questiontypeid = questiontypeid;
 		this.type = type;
 		this.description = description;
 		this.numberOfOptions = numberOfOptions;
+	}
+
+	public int getQuestiontypeid() {
+		return questiontypeid;
+	}
+
+	public void setQuestiontypeid(int questiontypeid) {
+		this.questiontypeid = questiontypeid;
 	}
 
 	public String getType() {

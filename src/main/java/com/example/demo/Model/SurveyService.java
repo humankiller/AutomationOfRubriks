@@ -160,5 +160,12 @@ public class SurveyService {
 		return isAdmin;
 		
 	}
+	
+	public ArrayList<QuestionType> getQuestionTypes() {
+		
+		ArrayList<QuestionType> questiontypes = dbconnect.getQuestionTypes();
+		
+		return questiontypes;
+	}
 
 }

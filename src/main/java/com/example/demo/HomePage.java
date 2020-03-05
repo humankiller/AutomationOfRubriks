@@ -135,4 +135,12 @@ public class HomePage {
 		
 	}
 	
+	@GetMapping("/admin/createtemplate/getquestiontypes")
+	public ArrayList<QuestionType> getQuestionTypes() {
+		
+		ArrayList<QuestionType> questiontypes = surveyManageService.getQuestionTypes();
+		
+		return questiontypes;
+	}
+	
 }
