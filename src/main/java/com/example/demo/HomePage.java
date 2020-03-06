@@ -162,11 +162,18 @@ public class HomePage {
 	@PutMapping("/admin/deletetemplate/surveytypeid={surveytypeid}")
 	public ResponseEntity<Boolean> deleteTemplate(@PathVariable("surveytypeid") int surveytypeid) {
 		
-		System.out.println("Im here");
-		
 		Boolean deleteTemplateStatus = surveyManageService.deleteTemplate(surveytypeid);
 		
 		return new ResponseEntity<Boolean>(deleteTemplateStatus, HttpStatus.OK);
+		
+	}
+	
+	@PutMapping("/admin/activatetemplate/surveytypeid={surveytypeid}")
+	public ResponseEntity<Boolean> activateTemplate(@PathVariable("surveytypeid") int surveytypeid) {
+		
+		Boolean activateTemplateStatus = surveyManageService.activateTemplate(surveytypeid);
+		
+		return new ResponseEntity<Boolean>(activateTemplateStatus, HttpStatus.OK);
 		
 	}
 	
