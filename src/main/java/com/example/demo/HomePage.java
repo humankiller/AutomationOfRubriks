@@ -81,7 +81,7 @@ public class HomePage {
 		return new ResponseEntity<Boolean>(confirmedLogin, HttpStatus.OK);
 	}
 
-	@GetMapping("/teamid={teamid}/surveytypes/showhidden={showHidden}")
+	@GetMapping("/surveytypes/showhidden={showHidden}")
 	public List<SurveyType> surveyTypesToReturn(@PathVariable("showHidden") boolean showHidden) {
 		System.out.println("I'm HERE!");
 		return surveyManageService.getSurveyTypes(showHidden);
