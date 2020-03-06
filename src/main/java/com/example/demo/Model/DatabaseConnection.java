@@ -1469,4 +1469,61 @@ public class DatabaseConnection {
 		
 		return createTemplateStatus;
 	}
+	
+	public boolean deleteTemplate(int surveytypeid) {
+		
+		boolean deleteTemplateStatus = false;
+		
+		Connection con = null;
+		
+		Statement statement = null;
+		
+		try {
+			
+			con = DriverManager.getConnection("jdbc:postgresql://ec2-107-22-239-155.compute-1.amazonaws.com/daknuflimm0laj", "utufnbbozfaphi", "4a7b61f6d36d53dd87d281cc3786acbe2bdcaf7470f7368b46ac370c1c5dbd95");
+			
+			statement = con.createStatement(); // Create a "Statement" object to do operations on
+			
+			if(con != null) { // Error checking
+				System.out.println("Database Connected");
+			}
+			
+			
+		} catch (SQLException e) {
+			System.out.println("Could not retrieve data from the database " + e.getMessage());
+			
+		}
+		
+		String deleteTemplateSQL = "UPDATE tblsurveytype SET active = 'false' WHERE surveytypeid = " + Integer.toString(surveytypeid) + ";";
+		
+		try {
+			
+			statement.executeUpdate(deleteTemplateSQL);
+			
+			deleteTemplateStatus = true;
+			
+		} catch(SQLException e) {
+			System.out.println("Could not delete template " + e.getMessage());
+		} finally {
+			if(con != null) {
+				try {
+					System.out.println("Closing connection...");
+					con.close();
+				} catch(SQLException e) {
+					
+				}
+			}
+			if(statement != null) {
+				try {
+					System.out.println("Closing statement...");
+					statement.close();
+				} catch(SQLException e) {
+					
+				}
+			}
+		}
+		
+		return deleteTemplateStatus;
+		
+	}
 }

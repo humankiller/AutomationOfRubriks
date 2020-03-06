@@ -181,5 +181,12 @@ public class SurveyService {
 		
 		return createTemplateStatus;
 	}
+	
+	public boolean deleteTemplate(int surveytypeid) {
+		
+		boolean deleteTemplateStatus = dbconnect.deleteTemplate(surveytypeid);
+		
+		return deleteTemplateStatus;
+	}
 
 }
