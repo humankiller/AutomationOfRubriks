@@ -274,28 +274,7 @@ public class DatabaseConnection {
 			int surveytypeid = 0;
 			
 			while(surveyData.next()) {
-				
-				survey.setSurveyid(surveyData.getInt("surveyid"));
-				survey.setName(surveyData.getString("name"));
-				surveytypeid = surveyData.getInt("surveytypeid");
-				
-				System.out.println("Here is the surveyTypeId: " + Integer.toString(surveytypeid));
-					
-				String searchForSurveyType = "SELECT * FROM tblsurveytype WHERE surveytypeid = " + Integer.toString(surveytypeid) + ";";
-				
-				Statement statementForSurveyType = openState(con);
-				
-				ResultSet surveyTypeData = statementForSurveyType.executeQuery(searchForSurveyType);
-				
-				while(surveyTypeData.next()) {
-					
-					typeOfSurvey.setSurveytypeid(surveyTypeData.getInt("surveytypeid"));
-					typeOfSurvey.setType(surveyTypeData.getString("type"));
-					typeOfSurvey.setDescription(surveyTypeData.getString("description"));
-					
-				}
-				
-				survey.setTypeOfSurvey(typeOfSurvey);
+				survey = getTheSurvey(con, surveyData.getInt("surveyid"));
 			}
 			
 			// Next, lets build the array of questions
@@ -331,7 +310,7 @@ public class DatabaseConnection {
 					
 					ResultSet questionTypesData = statementForQuestionTypes.executeQuery(getQuestionTypeInformation);
 					
-					while(questionTypesData.next()) {
+					while(questionTypesData.next()) { 
 						
 						QuestionType newQuestionType = new QuestionType();
 						
@@ -379,11 +358,7 @@ public class DatabaseConnection {
 			
 			while(surveyTypesData.next()) {
 				
-				SurveyType newSurveyType = new SurveyType();
-				newSurveyType.setSurveytypeid(surveyTypesData.getInt("surveytypeid"));
-				newSurveyType.setType(surveyTypesData.getString("type"));
-				newSurveyType.setDescription(surveyTypesData.getString("description"));
-				surveyTypes.add(newSurveyType);
+				SurveyType newSurveyType = getTheSurveyType(con, surveyTypesData.getInt("surveytypeid"));
 			}
 			
 		} catch(SQLException e) {
@@ -416,29 +391,7 @@ public class DatabaseConnection {
 			ResultSet surveysData = statementForSurveys.executeQuery(findAllSurveys);
 			
 			while(surveysData.next()) {
-				
-				Survey newSurvey = new Survey();
-				
-				newSurvey.setSurveyid(surveysData.getInt("surveyid"));
-				newSurvey.setName(surveysData.getString("name"));
-				
-				int surveyTypeid = surveysData.getInt("surveytypeid");
-				
-				String findSurveyType = "SELECT * FROM tblsurveytype WHERE surveytypeid = " + Integer.toString(surveyTypeid) + ";";
-				
-				Statement statementForSurveyType = openState(con);
-				
-				ResultSet surveyTypeData = statementForSurveyType.executeQuery(findSurveyType);
-				SurveyType typeOfSurvey = new SurveyType();
-				
-				while(surveyTypeData.next()) {
-					
-					typeOfSurvey.setSurveytypeid(surveyTypeData.getInt("surveytypeid"));
-					typeOfSurvey.setType(surveyTypeData.getString("type"));
-					typeOfSurvey.setDescription(surveyTypeData.getString("description"));
-				}
-				
-				newSurvey.setTypeOfSurvey(typeOfSurvey);
+				Survey newSurvey = getTheSurvey(con, surveysData.getInt("surveyid"));
 				surveys.add(newSurvey);
 			}
 		} catch(SQLException e) {
@@ -529,25 +482,7 @@ public class DatabaseConnection {
 			
 			while(surveysData.next()) {
 				
-				Survey newSurvey = new Survey();
-				
-				newSurvey.setSurveyid(surveysData.getInt("surveyid"));
-				newSurvey.setName(surveysData.getString("name"));
-				int surveyTypeid = surveysData.getInt("surveytypeid");
-				
-				String findSurveyType = "SELECT * FROM tblsurveytype WHERE surveytypeid = " + Integer.toString(surveyTypeid) + ";";
-				
-				Statement statementForSurveyType = openState(con);
-				ResultSet surveyTypeData = statementForSurveyType.executeQuery(findSurveyType);
-				SurveyType typeOfSurvey = new SurveyType();
-				
-				while(surveyTypeData.next()) {
-					typeOfSurvey.setSurveytypeid(surveyTypeData.getInt("surveytypeid"));
-					typeOfSurvey.setType(surveyTypeData.getString("type"));
-					typeOfSurvey.setDescription(surveyTypeData.getString("description"));					
-				}
-
-				newSurvey.setTypeOfSurvey(typeOfSurvey);	
+				Survey newSurvey = getTheSurvey(con, surveysData.getInt("surveyid"));
 				surveys.add(newSurvey);
 				returnReportOptions.setSurveys(surveys);
 			}
@@ -867,7 +802,7 @@ public class DatabaseConnection {
 			con = DriverManager.getConnection("jdbc:postgresql://ec2-107-22-239-155.compute-1.amazonaws.com/daknuflimm0laj", "utufnbbozfaphi", "4a7b61f6d36d53dd87d281cc3786acbe2bdcaf7470f7368b46ac370c1c5dbd95");
 			
 			if(con != null) { // Error checking
-				System.out.println("Database Connected");
+				//System.out.println("Database Connected");
 			}
 		} catch (SQLException e) {
 			System.out.println("Could not connect to the database. HERE");
@@ -884,7 +819,7 @@ public class DatabaseConnection {
 			statement = con.createStatement(); // Create a "Statement" object to do operations on
 			
 			if(statement != null) { // Error checking
-				System.out.println("Statement Connected");
+				//System.out.println("Statement Connected");
 			}
 		} catch (SQLException e) {
 			System.out.println("Could not connect to the database. HERE");
@@ -894,26 +829,84 @@ public class DatabaseConnection {
 	}
 	
 	/** 
-	 * 
-	 * @param con
+	 * @author Octavio
+	 * This closes a connection.
+	 * @param con The connection to the database.
+	 * @return Nothing; simply deletes the connection.
 	 */
 	public void closeConn(Connection con) {
 		if(con != null) {
 			try {
-				System.out.println("Closing connection...");
+				//System.out.println("Closing connection...");
 				con.close();
 			} catch(SQLException e) {
 				
 			}
 		}
+	}
+	
+	/**
+	 * @author Derek and Octavio
+	 * This function gets the survey type and returns it.
+	 * @param con The connection to the database.
+	 * @param surveytypeid The ID of the survey type.
+	 * @return SurveyType object
+	 */
+	
+	public SurveyType getTheSurveyType(Connection con, int surveytypeid) {
 		
-		/*if(statement != null) {
-			try {
-				System.out.println("Closing statement...");
-				statement.close();
-			} catch(SQLException e) {
-				
+		SurveyType typeOfSurvey = new SurveyType();
+		Statement statement = openState(con);
+		String findSurveyType = "SELECT * FROM tblsurveytype WHERE surveytypeid = " + Integer.toString(surveytypeid) + ";";
+		
+		try {
+			ResultSet surveyTypeData = statement.executeQuery(findSurveyType);
+			
+			while(surveyTypeData.next()) {
+				typeOfSurvey.setSurveytypeid(surveyTypeData.getInt("surveytypeid"));
+				typeOfSurvey.setType(surveyTypeData.getString("type"));
+				typeOfSurvey.setDescription(surveyTypeData.getString("description"));					
 			}
-		}*/
+		} catch(SQLException e) {
+			System.out.println("Could not get the surveytype.  " + e);
+		}
+		
+		return typeOfSurvey;
+		
+	}
+	
+	/**
+	 * @author Derek and Octavio
+	 * This function gets the survey and returns it.
+	 * @param con The connection to the database.
+	 * @param surveyid The ID of the survey type.
+	 * @return Survey object
+	 */
+	public Survey getTheSurvey(Connection con, int surveyid) {
+		
+		Survey theSurvey = new Survey();
+		Statement statement = openState(con);
+		String findTheSurvey = "SELECT * FROM tblsurvey WHERE surveyid = " + Integer.toString(surveyid) + ";";
+		
+		try {
+			
+			ResultSet surveyData = statement.executeQuery(findTheSurvey);
+			
+			while(surveyData.next()) {
+				
+				theSurvey.setSurveyid(surveyData.getInt("surveyid"));
+				theSurvey.setName(surveyData.getString("name"));
+				int surveytypeid = surveyData.getInt("surveytypeid");
+				
+				theSurvey.setTypeOfSurvey(getTheSurveyType(con, surveytypeid));
+
+			}
+			
+		} catch(SQLException e) {
+			System.out.println("Could not get the survey.  " + e);
+		}
+		
+		return theSurvey;
+		
 	}
 }
