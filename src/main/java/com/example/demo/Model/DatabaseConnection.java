@@ -274,7 +274,7 @@ public class DatabaseConnection {
 			int surveytypeid = 0;
 			
 			while(surveyData.next()) {
-				survey = getTheSurvey(con, surveyData.getInt("surveyid"));
+				survey = getTheSurvey(con, givenSurveyid);
 			}
 			
 			// Next, lets build the array of questions
