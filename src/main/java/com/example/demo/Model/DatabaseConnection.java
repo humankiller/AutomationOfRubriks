@@ -357,8 +357,8 @@ public class DatabaseConnection {
 			ResultSet surveyTypesData = statementForSurveyTypes.executeQuery(findAllSurveyTypes);
 			
 			while(surveyTypesData.next()) {
-				
 				SurveyType newSurveyType = getTheSurveyType(con, surveyTypesData.getInt("surveytypeid"));
+				surveyTypes.add(newSurveyType);
 			}
 			
 		} catch(SQLException e) {
