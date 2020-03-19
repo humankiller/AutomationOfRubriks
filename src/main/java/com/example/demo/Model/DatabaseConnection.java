@@ -268,14 +268,8 @@ public class DatabaseConnection {
 		
 		try {
 			
-			// First, we must look for the survey that the frontend wants to grab
-			String searchForSurvey = "SELECT * FROM tblsurvey WHERE surveyid = " + Integer.toString(givenSurveyid) + ";";
-			ResultSet surveyData = statement.executeQuery(searchForSurvey);
-			int surveytypeid = 0;
-			
-			while(surveyData.next()) {
-				survey = getTheSurvey(con, givenSurveyid);
-			}
+			survey = getTheSurvey(con, givenSurveyid);
+			int surveytypeid = survey.getTypeOfSurvey().getSurveytypeid();
 			
 			// Next, lets build the array of questions
 			
@@ -357,6 +351,7 @@ public class DatabaseConnection {
 			ResultSet surveyTypesData = statementForSurveyTypes.executeQuery(findAllSurveyTypes);
 			
 			while(surveyTypesData.next()) {
+				
 				SurveyType newSurveyType = getTheSurveyType(con, surveyTypesData.getInt("surveytypeid"));
 				surveyTypes.add(newSurveyType);
 			}
