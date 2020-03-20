@@ -289,6 +289,10 @@ public class DatabaseConnection {
 				
 				ResultSet questionsData = statementForQuestions.executeQuery(getQuestionInformation);
 				
+				
+				//******************************
+				// REPLACE WITH getQuestion*****
+				//******************************
 				while(questionsData.next()) {
 					
 					Question newQuestion = new Question();
@@ -304,6 +308,9 @@ public class DatabaseConnection {
 					
 					ResultSet questionTypesData = statementForQuestionTypes.executeQuery(getQuestionTypeInformation);
 					
+					//**********************************
+					// REPLACE WITH getQuestionType*****
+					//**********************************
 					while(questionTypesData.next()) { 
 						
 						QuestionType newQuestionType = new QuestionType();
@@ -313,9 +320,14 @@ public class DatabaseConnection {
 						newQuestionType.setDescription(questionTypesData.getString("description"));
 						newQuestion.setTypeOfQuestion(newQuestionType);
 					}
-					
+					//**********************************
+					// REPLACE WITH getQuestionType*****
+					//**********************************
 					questions.add(newQuestion);
 				}
+				//******************************
+				// REPLACE WITH getQuestion*****
+				//******************************
 				
 				surveyQuestionsToReturn.setSurvey(survey);
 				surveyQuestionsToReturn.setQuestions(questions);
@@ -330,6 +342,54 @@ public class DatabaseConnection {
 		return surveyQuestionsToReturn;
 		
 	}
+	
+	
+	//*********************
+	//***NATHAN'S CHANGE***
+	//*********************
+	public void getQuestion(ResultSet quesData, ArrayList<Question> questions, Connection con) {
+		try {
+			while(quesData.next()) {
+				
+				Question newQuestion = new Question();
+				
+				newQuestion.setQuestionScore(-1);
+				newQuestion.setQuestion(quesData.getString("question"));
+				newQuestion.setQuestionid(quesData.getInt("questionid"));
+				
+				int questionTypeId = quesData.getInt("questiontypeid");
+				String getQuestionTypeInformation = "SELECT * FROM tblquestiontype WHERE questiontypeid = " + Integer.toString(questionTypeId) + ";";
+				
+				Statement statementForQuestionTypes = openState(con);
+				
+				ResultSet questionTypesData = statementForQuestionTypes.executeQuery(getQuestionTypeInformation);
+				
+				getQuestionType(questionTypesData, newQuestion); // calls inner while loop
+				
+				questions.add(newQuestion);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void getQuestionType(ResultSet typeData, Question newQuestion){
+		try {
+			while(typeData.next()) { 
+				
+				QuestionType newQuestionType = new QuestionType();
+				newQuestionType.setType(typeData.getString("type"));
+				newQuestionType.setNumberOfOptions(typeData.getInt("numberofoptions"));
+				newQuestionType.setDescription(typeData.getString("description"));
+				newQuestion.setTypeOfQuestion(newQuestionType);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	//*********************
+	//***NATHAN'S CHANGE***
+	//*********************
 	
 	public List<SurveyType> getSurveyTypes(boolean showHidden) {
 		
