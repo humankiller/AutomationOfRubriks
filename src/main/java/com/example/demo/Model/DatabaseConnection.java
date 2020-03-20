@@ -556,9 +556,7 @@ public class DatabaseConnection {
 					
 					ResultSet questionsData = statementForQuestions.executeQuery(getQuestionInformation);
 					
-					getQuestion(questionsData, answers, con);
-					
-					/*
+					//getQuestion(questionsData, answers, con);
 					
 					while(questionsData.next()) {
 						
@@ -585,7 +583,7 @@ public class DatabaseConnection {
 					
 					
 					answers.add(newAnswer);
-					*/
+					
 				}
 				takenSurvey.setQuestions(answers);
 				takenSurvey.setTotalScore(totalScore);
