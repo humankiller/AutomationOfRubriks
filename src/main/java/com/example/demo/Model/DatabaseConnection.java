@@ -786,12 +786,12 @@ public class DatabaseConnection {
 	}
 	
 	/**
-	 * This function checks if the given item is in the given table in the database.
+	 * This function checks if the given item (String) is in the given table in the database.
 	 * @author Derek
 	 * @param con	The connection of the parent function so that this function can create a statement.
 	 * @param tblName	The name of the table that you want to check for a duplicate.
 	 * @param collumnName	The attribute that can not have a duplicate.
-	 * @param item	The item that needs to be checked.
+	 * @param item	The item that needs to be checked.  (String)
 	 * @return If the item is found, it will return the primary key of the item.  If it is not found, it will return 0.
 	 */
 	public int itemInDatabase(Connection con, String tblName, String collumnName, String item) {
@@ -813,6 +813,75 @@ public class DatabaseConnection {
 		// We don't want to close the connection because it is still needed for the operation that comes after this function call
 		
 		return itemPrimaryKey;
+	}
+	
+	/**
+	 * This function checks if the given item (int) is in the given table in the database.
+	 * @author Derek
+	 * @param con	The connection of the parent function so that this function can create a statement.
+	 * @param tblName	The name of the table that you want to check for a duplicate.
+	 * @param collumnName	The attribute that can not have a duplicate.
+	 * @param item	The item that needs to be checked.  (int)
+	 * @return If the item is found, it will return the primary key of the item.  If it is not found, it will return 0.
+	 */
+	public int intInDatabase(Connection con, String tblName, String collumnName, int item) {
+		
+		int itemPrimaryKey = 0;
+		Statement statement = openState(con);
+		String sql = "SELECT * FROM " + tblName + " WHERE " + collumnName + " = '" + Integer.toString(item) + "';";
+		try {
+			ResultSet results = statement.executeQuery(sql);
+			if(results.next() == true) {
+				itemPrimaryKey = results.getInt(1); // Gets the primary key of the item from the table, no matter what the collumn name is.
+			} else {
+				itemPrimaryKey = 0;
+			}
+		} catch(SQLException e) {
+			System.out.println("Could not check if " + Integer.toString(item) + " with collumn name " + collumnName + " is in table " + tblName + ".  " + e);
+		}
+		
+		// We don't want to close the connection because it is still needed for the operation that comes after this function call
+		
+		return itemPrimaryKey;
+	}
+	
+	/**
+	 * This function adds a question to the database.  Still need to learn checking criteria.
+	 * @author Derek
+	 * @param Question	The question that will be added to the database.
+	 * @param questiontypeid	The questiontypeid that will be connected to the question.
+	 * @return The completion status of the insert question operation (true if successful; false if unsuccessful).
+	 */
+	public boolean insertQuestion(Question questionToInsert, int questiontypeid) {
+		
+		boolean completionStatus = false;
+		Connection con = openConn();
+		Statement statement = openState(con);
+		
+		/* First, we will check if the question is already in the database, and, if it is, if that question has the same question type */
+		int questionInDatabase = itemInDatabase(con, "tblquestion", "question", questionToInsert.getQuestion());
+		int questionInDatabaseWithSameQuestionType = intInDatabase(con, "tblquestion", "questiontyepid", questiontypeid);
+		
+		/* If these numbers are 0 or are not the same, then you are good to insert. */
+		if(questionInDatabase == 0 || questionInDatabaseWithSameQuestionType == 0 || questionInDatabase != questionInDatabaseWithSameQuestionType) {
+			try {
+				
+				String insertSQL = "INSERT INTO tblquestion (questiontypeid, question) VALUES(" + Integer.toString(questiontypeid) + ", '" + questionToInsert.getQuestion() + "');";
+				statement.executeUpdate(insertSQL);
+				System.out.println("Inserted question into the database!");
+				completionStatus = true;
+				
+			} catch(SQLException e) {
+				System.out.println("An error occured when trying to add question.  " + e);
+				completionStatus = false;
+			}
+		} else { // The question was found in tblquestion with the same question type, so we should not add it to the database.
+			System.out.println("A duplicate question with the same question type was found in the database; cannot insert.");
+			completionStatus = false;
+		}
+		
+		closeConn(con); // Close the connection at the end of the operation.
+		return completionStatus;
 	}
 	
 	/** 
