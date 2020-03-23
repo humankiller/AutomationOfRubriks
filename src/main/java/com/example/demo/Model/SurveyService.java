@@ -202,5 +202,12 @@ public class SurveyService {
 		
 		return completionStatus;
 	}
+	
+	public boolean editQuestionType(QuestionType editedTypeOfQuestion, String questionTypeToEdit) {
+		
+		boolean completionStatus = dbconnect.editQuestionType(editedTypeOfQuestion, questionTypeToEdit);
+		
+		return completionStatus;
+	}
 
 }

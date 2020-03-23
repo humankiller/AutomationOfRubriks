@@ -185,4 +185,12 @@ public class HomePage {
 		return new ResponseEntity<Boolean>(completionStatus, HttpStatus.OK);
 	}
 	
+	@PutMapping("/admin/editquestiontype/{questionTypeToEdit}")
+	public ResponseEntity<Boolean> editQuestionType(@RequestBody QuestionType editedTypeOfQuestion, @PathVariable("questionTypeToEdit") String questionTypeToEdit) {
+		
+		Boolean completionStatus = surveyManageService.editQuestionType(editedTypeOfQuestion, questionTypeToEdit);
+		
+		return new ResponseEntity<Boolean>(completionStatus, HttpStatus.OK);
+	}
+	
 }

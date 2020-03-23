@@ -825,7 +825,6 @@ public class DatabaseConnection {
 	public boolean insertQuestionType(QuestionType typeOfQuestion) {
 		
 		boolean completionStatus = false;
-		
 		Connection con = openConn();
 		Statement statement = openState(con);
 		
@@ -848,7 +847,42 @@ public class DatabaseConnection {
 			completionStatus = false;
 		}
 		
-		closeConn(con); // Close the connection at the end.
+		closeConn(con); // Close the connection at the end of the operation.
+		return completionStatus;
+	}
+	
+	/**
+	 * This function updates a question type in the database.
+	 * @author Derek
+	 * @param editedTypeOfQuestion	The question type that will replace the question type with the given type.
+	 * @param questionTypeToEdit	The type of question type that will be edited.
+	 * @return The completion status of the edit question type operation (true if successful; false if unsuccessful).
+	 */
+	public boolean editQuestionType(QuestionType editedTypeOfQuestion, String questionTypeToEdit) {
+		
+		boolean completionStatus = false;
+		Connection con = openConn();
+		Statement statement = openState(con);
+		
+		/* First, we will check if the question type with the type specified in the questionTypeToEdit is already in the database by using the itemInDatabase function. */
+		int itemInDatabase = itemInDatabase(con, "tblquestiontype", "type", questionTypeToEdit);
+		if(itemInDatabase != 0) { // There is a questiontype in the database with that type, so we are good to perform the update.
+			
+			System.out.println("Performing update on questiontype with primary key = " + Integer.toString(itemInDatabase));
+			String updateSQL = "UPDATE tblquestiontype SET type = '" + editedTypeOfQuestion.getType() + "', description = '" + editedTypeOfQuestion.getDescription() + "', numberofoptions = " + Integer.toString(itemInDatabase) + " WHERE questiontypeid = " + Integer.toString(itemInDatabase) + ";";
+			try {
+				statement.executeUpdate(updateSQL);
+				completionStatus = true;
+			} catch(SQLException e) {
+				System.out.println("An error occured when trying to edit the questiontype with primary key = " + Integer.toString(itemInDatabase) + " in the tblquestiontype table; cannot perform update.  " + e);
+				completionStatus = false;
+			}
+		} else { // There is not a questiontype in the database with that type, so we cannot perform the update.
+			System.out.println("There is no questiontype in the database with that type; cannot perform update.");
+			completionStatus = false;
+		}
+		
+		closeConn(con); // Close the connection at the end of the operation.
 		return completionStatus;
 	}
 	
