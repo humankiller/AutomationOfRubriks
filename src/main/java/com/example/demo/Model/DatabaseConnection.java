@@ -62,6 +62,7 @@ public class DatabaseConnection {
 		Connection con = openConn();
 		Statement statement = openState(con);
 		
+		// First, we must check if there is a team in the database that already has this team name
 		int itemInDatabase = itemInDatabase(con, "tblteams", "teamname", teamToInsert.getTeamName());
 		if (itemInDatabase == 0) { // There is team in the database with this teamname, so we're good to insert the team
 			System.out.println("Good to insert");
@@ -78,52 +79,12 @@ public class DatabaseConnection {
 				System.out.println("There was an error when trying to insert the team. " + e);
 				return false;
 			}
-		} else {
-			System.out.println("Found duplicate in tblteams with teamid = " + Integer.toString(itemInDatabase));
+		} else { // A team with that team name was found.  Cannot insert.
+			System.out.println("Found duplicate in tblteams with teamid = " + Integer.toString(itemInDatabase) + "; Cannot insert into the database.");
 		}
 		
 		closeConn(con); // Close the connection once all operations are done.
 		return false;
-		
-		/*
-		
-		// First, we need to check if the team is already in the database
-		String checkForDuplicateTeam = "SELECT 1 FROM tblteams WHERE teamname = '" + teamToInsert.getTeamName() + "'"; 
-		
-		try {
-			
-			ResultSet results = statement.executeQuery(checkForDuplicateTeam);
-			if(results.next() == false) { // No duplicate team was found
-				
-				System.out.println("Good to insert");
-				
-				try {
-					
-					String insertIntoTeamTable = "INSERT INTO tblteams (teamname) VALUES ('" + teamToInsert.getTeamName() + "')";
-					statement.executeUpdate(insertIntoTeamTable);
-					System.out.println("Inserted " + teamToInsert.getTeamName() + " into the database.");
-					
-					return true;
-					
-				} catch(SQLException e){
-					System.out.println("There was an error when trying to insert the team. " + e);
-					return false;
-				}
-				
-			} else { // A duplicate team was found
-				System.out.println("Found duplicate");
-			}
-			
-		} catch(SQLException e){
-			System.out.println("Could not add team to the database" + e);
-			return false;
-		} finally {
-			closeConn(con);
-		}
-		
-		return false;
-		*/
-			
 	}
 
 	
@@ -142,14 +103,6 @@ public class DatabaseConnection {
 		Statement statement = openState(con);
 		
 		// First, I must check if the team that is being edited doesn't conflict with any other teams
-		/*
-		String checkForDuplicateTeam = "SELECT 1 FROM tblteams WHERE teamname = '" + newTeamData.getTeamName() + "'"; 
-		
-		try {
-			
-			ResultSet results = statement.executeQuery(checkForDuplicateTeam);
-			if(results.next() == false) { // No duplicate team was found
-			*/
 		int itemInDatabase = itemInDatabase(con, "tblteams", "teamname", newTeamData.getTeamName());
 		if(itemInDatabase == 0) {
 			
@@ -171,8 +124,8 @@ public class DatabaseConnection {
 		} else { // A duplicate team was found
 			System.out.println("There is already a teamname in the database that has the edited name w/ primary key = " + Integer.toString(itemInDatabase) + " in tblteams.");
 		}
-		closeConn(con);
 		
+		closeConn(con);
 		return false;
 	}
 	
@@ -233,28 +186,8 @@ public class DatabaseConnection {
 		} else { // There is no team in the database with that teamname, because itemInDatabase = 0
 			System.out.println("There was no team with that team name to delete in the database");
 		}
-		/*
-		
-		String checkForDuplicateTeam = "SELECT * FROM tblteams WHERE teamname = '" + teamNameToDelete + "'"; 
-		
-		try {
-			
-			ResultSet results = statement.executeQuery(checkForDuplicateTeam);
-			if(results.next() == true) { // There is a team in the database with that name, so it is time to delete it
-				
-				
-			} else { // A duplicate team was found
-				System.out.println("There was no team with that team name to delete in the database");
-			}
-		} catch(SQLException e) {
-			System.out.println("Could not delete team from the database" + e);
-		} finally {
-			closeConn(con);
-		}
-		*/
 		
 		closeConn(con);
-		
 		return false;
 	}
 	
