@@ -177,4 +177,12 @@ public class HomePage {
 		
 	}
 	
+	@PostMapping("/admin/insertquestiontype")
+	public ResponseEntity<Boolean> insertQuestionType(@RequestBody QuestionType typeOfQuestion) {
+		
+		Boolean completionStatus = surveyManageService.insertQuestionType(typeOfQuestion);
+		
+		return new ResponseEntity<Boolean>(completionStatus, HttpStatus.OK);
+	}
+	
 }

@@ -62,6 +62,31 @@ public class DatabaseConnection {
 		Connection con = openConn();
 		Statement statement = openState(con);
 		
+		int itemInDatabase = itemInDatabase(con, "tblteams", "teamname", teamToInsert.getTeamName());
+		if (itemInDatabase == 0) { // There is team in the database with this teamname, so we're good to insert the team
+			System.out.println("Good to insert");
+			
+			try {
+				
+				String insertIntoTeamTable = "INSERT INTO tblteams (teamname) VALUES ('" + teamToInsert.getTeamName() + "')";
+				statement.executeUpdate(insertIntoTeamTable);
+				System.out.println("Inserted " + teamToInsert.getTeamName() + " into the database.");
+				
+				return true;
+				
+			} catch(SQLException e){
+				System.out.println("There was an error when trying to insert the team. " + e);
+				return false;
+			}
+		} else {
+			System.out.println("Found duplicate in tblteams with teamid = " + Integer.toString(itemInDatabase));
+		}
+		
+		closeConn(con); // Close the connection once all operations are done.
+		return false;
+		
+		/*
+		
 		// First, we need to check if the team is already in the database
 		String checkForDuplicateTeam = "SELECT 1 FROM tblteams WHERE teamname = '" + teamToInsert.getTeamName() + "'"; 
 		
@@ -97,6 +122,7 @@ public class DatabaseConnection {
 		}
 		
 		return false;
+		*/
 			
 	}
 
@@ -116,35 +142,36 @@ public class DatabaseConnection {
 		Statement statement = openState(con);
 		
 		// First, I must check if the team that is being edited doesn't conflict with any other teams
+		/*
 		String checkForDuplicateTeam = "SELECT 1 FROM tblteams WHERE teamname = '" + newTeamData.getTeamName() + "'"; 
 		
 		try {
 			
 			ResultSet results = statement.executeQuery(checkForDuplicateTeam);
 			if(results.next() == false) { // No duplicate team was found
+			*/
+		int itemInDatabase = itemInDatabase(con, "tblteams", "teamname", newTeamData.getTeamName());
+		if(itemInDatabase == 0) {
+			
 				
-				System.out.println("Good to edit");
+			System.out.println("Good to edit");
+			
+			try {
 				
-				try {
-					
-					String editTeamSQL = "UPDATE tblteams SET teamname = '" + newTeamData.getTeamName() + "' WHERE teamname = '" + teamNameToEdit + "'";
-					statement.executeUpdate(editTeamSQL);
-					System.out.println("Team " + teamNameToEdit + " was changed to " + newTeamData.getTeamName());
+				String editTeamSQL = "UPDATE tblteams SET teamname = '" + newTeamData.getTeamName() + "' WHERE teamname = '" + teamNameToEdit + "'";
+				statement.executeUpdate(editTeamSQL);
+				System.out.println("Team " + teamNameToEdit + " was changed to " + newTeamData.getTeamName());
 
-					return true;
+				return true;
 
-				} catch(SQLException e){
-					System.out.println("There was an error when trying to edit the team. " + e);
-					return false;
-				}	
-			} else { // A duplicate team was found
-				System.out.println("Found duplicate");
-			}
-		} catch(SQLException e) {
-			System.out.println("Could not edit team to the database" + e);
-		} finally {
-			closeConn(con);
+			} catch(SQLException e){
+				System.out.println("There was an error when trying to edit the team. " + e);
+				return false;
+			}	
+		} else { // A duplicate team was found
+			System.out.println("There is already a teamname in the database that has the edited name w/ primary key = " + Integer.toString(itemInDatabase) + " in tblteams.");
 		}
+		closeConn(con);
 		
 		return false;
 	}
@@ -165,6 +192,49 @@ public class DatabaseConnection {
 		
 		// First, I must check if the team that is being deleted is in the database
 		
+		int itemInDatabase = itemInDatabase(con, "tblteams", "teamname", teamNameToDelete);
+		if(itemInDatabase != 0) { // There is a team in the database that matches this name, and its primary key is itemInDatabase
+			
+			System.out.println("Found team to delete");
+			System.out.println("Team ID to delete: " + Integer.toString(itemInDatabase));
+			
+			try {
+				
+				// First, find TakenSurveys with that teamid
+				String findTakenSurveysDependentOnTeam = "SELECT * FROM tbltakensurvey WHERE teamsid = " + Integer.toString(itemInDatabase) + ";";
+				
+				Statement deleteStatement = openState(con);
+				
+				ResultSet thingsToDelete = statement.executeQuery(findTakenSurveysDependentOnTeam);
+				
+				while(thingsToDelete.next()) {
+					
+					// For each TakenSurvey with that teamid, delete all answers with that takensurveyid
+					String deleteAnwersDepedentOnTakenSurvey = "DELETE FROM tblanswer WHERE takensurveyid = " + Integer.toString(thingsToDelete.getInt("takensurveyid")) + ";";
+					deleteStatement.executeUpdate(deleteAnwersDepedentOnTakenSurvey);
+				}
+				
+				// Then, delete all TakenSurveys with that teamid
+				String deleteTakenSurveysDependentOnTeam = "DELETE FROM tbltakensurvey WHERE teamsid = " + Integer.toString(itemInDatabase) + ";";
+				deleteStatement.executeUpdate(deleteTakenSurveysDependentOnTeam);
+				
+				// Finally, delete the team
+				String deleteTeamSQL = "DELETE FROM tblteams WHERE teamname = '" + teamNameToDelete + "'";
+				statement.executeUpdate(deleteTeamSQL);
+				System.out.println("Team " + teamNameToDelete + " was deleted from the database");
+					
+				return true;
+				
+			} catch(SQLException e){
+				System.out.println("There was an error when trying to delete the team. " + e);
+				return false;
+			}
+			
+		} else { // There is no team in the database with that teamname, because itemInDatabase = 0
+			System.out.println("There was no team with that team name to delete in the database");
+		}
+		/*
+		
 		String checkForDuplicateTeam = "SELECT * FROM tblteams WHERE teamname = '" + teamNameToDelete + "'"; 
 		
 		try {
@@ -172,41 +242,7 @@ public class DatabaseConnection {
 			ResultSet results = statement.executeQuery(checkForDuplicateTeam);
 			if(results.next() == true) { // There is a team in the database with that name, so it is time to delete it
 				
-				System.out.println("Found team to delete");
-				int teamid = results.getInt("teamid");
-				System.out.println("Team ID to delete: " + Integer.toString(teamid));
 				
-				try {
-					
-					// First, find TakenSurveys with that teamid
-					String findTakenSurveysDependentOnTeam = "SELECT * FROM tbltakensurvey WHERE teamsid = " + Integer.toString(teamid) + ";";
-					
-					Statement deleteStatement = openState(con);
-					
-					ResultSet thingsToDelete = statement.executeQuery(findTakenSurveysDependentOnTeam);
-					
-					while(thingsToDelete.next()) {
-						
-						// For each TakenSurvey with that teamid, delete all answers with that takensurveyid
-						String deleteAnwersDepedentOnTakenSurvey = "DELETE FROM tblanswer WHERE takensurveyid = " + Integer.toString(thingsToDelete.getInt("takensurveyid")) + ";";
-						deleteStatement.executeUpdate(deleteAnwersDepedentOnTakenSurvey);
-					}
-					
-					// Then, delete all TakenSurveys with that teamid
-					String deleteTakenSurveysDependentOnTeam = "DELETE FROM tbltakensurvey WHERE teamsid = " + Integer.toString(teamid) + ";";
-					deleteStatement.executeUpdate(deleteTakenSurveysDependentOnTeam);
-					
-					// Finally, delete the team
-					String deleteTeamSQL = "DELETE FROM tblteams WHERE teamname = '" + teamNameToDelete + "'";
-					statement.executeUpdate(deleteTeamSQL);
-					System.out.println("Team " + teamNameToDelete + " was deleted from the database");
-						
-					return true;
-					
-				} catch(SQLException e){
-					System.out.println("There was an error when trying to delete the team. " + e);
-					return false;
-				}
 			} else { // A duplicate team was found
 				System.out.println("There was no team with that team name to delete in the database");
 			}
@@ -215,6 +251,9 @@ public class DatabaseConnection {
 		} finally {
 			closeConn(con);
 		}
+		*/
+		
+		closeConn(con);
 		
 		return false;
 	}
@@ -813,6 +852,73 @@ public class DatabaseConnection {
 		return activateTemplateStatus;
 	}
 	
+	/**
+	 * This function checks if the given item is in the given table in the database.
+	 * @author Derek
+	 * @param con	The connection of the parent function so that this function can create a statement.
+	 * @param tblName	The name of the table that you want to check for a duplicate.
+	 * @param collumnName	The attribute that can not have a duplicate.
+	 * @param item	The item that needs to be checked.
+	 * @return If the item is found, it will return the primary key of the item.  If it is not found, it will return 0.
+	 */
+	public int itemInDatabase(Connection con, String tblName, String collumnName, String item) {
+		
+		int itemPrimaryKey = 0;
+		Statement statement = openState(con);
+		String sql = "SELECT * FROM " + tblName + " WHERE " + collumnName + " = '" + item + "';";
+		try {
+			ResultSet results = statement.executeQuery(sql);
+			if(results.next() == true) {
+				itemPrimaryKey = results.getInt(1); // Gets the primary key of the item from the table, no matter what the collumn name is.
+			} else {
+				itemPrimaryKey = 0;
+			}
+		} catch(SQLException e) {
+			System.out.println("Could not check if " + item + " with collumn name " + collumnName + " is in table " + tblName + ".  " + e);
+		}
+		
+		// We don't want to close the connection because it is still needed for the operation that comes after this function call
+		
+		return itemPrimaryKey;
+	}
+	
+	/** 
+	 * This function adds a question type to the database.
+	 * @author Derek
+	 * @param typeOfQuestion	The question type that will be added to the database.
+	 * @return The completion status of the insert question type operation (true if successful; false if unsuccessful).
+	 */
+	
+	public boolean insertQuestionType(QuestionType typeOfQuestion) {
+		
+		boolean completionStatus = false;
+		
+		Connection con = openConn();
+		Statement statement = openState(con);
+		
+		/* First, we will check if the question type is already in the database by using the itemInDatabase function. */
+		int itemInDatabase = itemInDatabase(con, "tblquestiontype", "type", typeOfQuestion.getType());
+		if(itemInDatabase == 0) { // If itemInDatabase = 0, this means that we are good to insert
+			try {
+				
+				String insertSQL = "INSERT INTO tblquestiontype (type, description, numberofoptions) VALUES('" + typeOfQuestion.getType() + "', '" + typeOfQuestion.getDescription() + "', " + Integer.toString(typeOfQuestion.getNumberOfOptions()) + ");";
+				statement.executeUpdate(insertSQL);
+				System.out.println("Inserted into the database!");
+				completionStatus = true;
+				
+			} catch(SQLException e) {
+				System.out.println("There was an error when inserting.  " + e);
+				completionStatus = false;
+			}
+		} else { // An item with the same type was found in the tblquestiontype table, so we can not insert.
+			System.out.println("A duplicate item with primary key = " + Integer.toString(itemInDatabase) + " was found in the tblquestiontype table; cannnot insert.");
+			completionStatus = false;
+		}
+		
+		closeConn(con); // Close the connection at the end.
+		return completionStatus;
+	}
+	
 	///////////////////////////////////////////////////////////////////////////////////////
 	// Name: openConnState
 	// Parameter(s): Connection and Statement
@@ -828,7 +934,7 @@ public class DatabaseConnection {
 				//System.out.println("Database Connected");
 			}
 		} catch (SQLException e) {
-			System.out.println("Could not connect to the database. HERE");
+			System.out.println("Could not connect to the database.  " + e);
 		}
 		
 		return con;
@@ -845,7 +951,7 @@ public class DatabaseConnection {
 				//System.out.println("Statement Connected");
 			}
 		} catch (SQLException e) {
-			System.out.println("Could not connect to the database. HERE");
+			System.out.println("Could not connect to the database.  " + e);
 		}
 		
 		return statement;
@@ -860,7 +966,7 @@ public class DatabaseConnection {
 	public void closeConn(Connection con) {
 		if(con != null) {
 			try {
-				//System.out.println("Closing connection...");
+				System.out.println("Closing connection...");
 				con.close();
 			} catch(SQLException e) {
 				

@@ -195,5 +195,12 @@ public class SurveyService {
 		
 		return activateTemplateStatus;
 	}
+	
+	public boolean insertQuestionType(QuestionType typeOfQuestion) {
+		
+		boolean completionStatus = dbconnect.insertQuestionType(typeOfQuestion);
+		
+		return completionStatus;
+	}
 
 }
