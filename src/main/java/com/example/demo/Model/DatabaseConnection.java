@@ -449,14 +449,13 @@ public class DatabaseConnection {
 		Statement statement = openState(con);
 		
 		/* First, we will check if the survey is already in the database, and, if it is, if that question has the same question type */
-		int surveyInDatabase = itemInDatabase(con, "tblsurvey", "survey", surveyToInsert.getName());
-		int surveyInDatabaseWithSameSurveyType = intInDatabase(con, "tblquestion", "questiontyepid", surveytypeid);
+		int surveyInDatabase = itemInDatabase(con, "tblsurvey", "name", surveyToInsert.getName());
 		
 		/* If these numbers are 0 or are not the same, then you are good to insert. */
-		if(surveyInDatabase == 0 || surveyInDatabaseWithSameSurveyType == 0 || surveyInDatabase != surveyInDatabaseWithSameSurveyType) {
+		if(surveyInDatabase == 0) {
 			try {
 				
-				String insertSQL = "INSERT INTO tblsurvey (surveytypeid, survey) VALUES(" + Integer.toString(surveytypeid) + ", '" + surveyToInsert.getName() + "');";
+				String insertSQL = "INSERT INTO tblsurvey (surveytypeid, name) VALUES(" + Integer.toString(surveytypeid) + ", '" + surveyToInsert.getName() + "');";
 				statement.executeUpdate(insertSQL);
 				System.out.println("Inserted survey into the database!");
 				completionStatus = true;
