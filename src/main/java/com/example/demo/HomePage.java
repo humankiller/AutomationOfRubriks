@@ -218,7 +218,7 @@ public class HomePage {
 		
 	}
 	
-	@PostMapping("/admin/{surveytypeid}/addsurvey")
+	@PostMapping("/admin/addsurvey/{surveytypeid}")
 	public ResponseEntity<Boolean> insertSurvey(@RequestBody Survey surveyToInsert, @PathVariable("surveytypeid") int surveytypeid) {
 		
 		Boolean completionStatus = surveyManageService.insertSurvey(surveyToInsert, surveytypeid);
