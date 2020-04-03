@@ -217,4 +217,12 @@ public class HomePage {
 		return new ResponseEntity<Boolean>(deleteSurvey, HttpStatus.OK);
 		
 	}
+	
+	@PostMapping("/admin/{surveytypeid}/addsurvey")
+	public ResponseEntity<Boolean> insertSurvey(@RequestBody Survey surveyToInsert, @PathVariable("surveytypeid") int surveytypeid) {
+		
+		Boolean completionStatus = surveyManageService.insertSurvey(surveyToInsert, surveytypeid);
+		
+		return new ResponseEntity<Boolean>(completionStatus, HttpStatus.OK);
+	}
 }

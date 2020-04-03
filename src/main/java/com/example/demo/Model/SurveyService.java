@@ -230,5 +230,12 @@ public class SurveyService {
 		
 		return completionStatus;
 	}
+	
+	public boolean insertSurvey(Survey surveyToInsert, int surveytypeid) {
+		
+		boolean completionStatus = dbconnect.insertSurvey(surveyToInsert, surveytypeid);
+		
+		return completionStatus;
+	}
 
 }

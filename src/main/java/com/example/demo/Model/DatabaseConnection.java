@@ -442,14 +442,38 @@ public class DatabaseConnection {
 		return false;
 	}
 	
-	
-	/* **************************************************************************************************************************************************************** */
-	
-	/*
-	* Here I will edit a team that already exists in the database
-	********************************************************************************************************************************************************************
-	*/
+	public boolean insertSurvey(Survey surveyToInsert, int surveytypeid) {
 		
+		boolean completionStatus = false;
+		Connection con = openConn();
+		Statement statement = openState(con);
+		
+		/* First, we will check if the survey is already in the database, and, if it is, if that question has the same question type */
+		int surveyInDatabase = itemInDatabase(con, "tblsurvey", "survey", surveyToInsert.getName());
+		int surveyInDatabaseWithSameSurveyType = intInDatabase(con, "tblquestion", "questiontyepid", surveytypeid);
+		
+		/* If these numbers are 0 or are not the same, then you are good to insert. */
+		if(surveyInDatabase == 0 || surveyInDatabaseWithSameSurveyType == 0 || surveyInDatabase != surveyInDatabaseWithSameSurveyType) {
+			try {
+				
+				String insertSQL = "INSERT INTO tblsurvey (surveytypeid, survey) VALUES(" + Integer.toString(surveytypeid) + ", '" + surveyToInsert.getName() + "');";
+				statement.executeUpdate(insertSQL);
+				System.out.println("Inserted survey into the database!");
+				completionStatus = true;
+				
+			} catch(SQLException e) {
+				System.out.println("An error occured when trying to add survey.  " + e);
+				completionStatus = false;
+			}
+		} else { // The question was found in tblsurvey with the same survey type, so we should not add it to the database.
+			System.out.println("A duplicate survey with the same survey type was found in the database; cannot insert.");
+			completionStatus = false;
+		}
+		
+		closeConn(con); // Close the connection at the end of the operation.
+		return completionStatus;
+	}
+
 		public boolean editSurveyName(Survey newSurveyData, String surveyNameToEdit) {
 			
 			System.out.println("Survey " + surveyNameToEdit + " will be changed to " + newSurveyData.getName());
@@ -457,7 +481,7 @@ public class DatabaseConnection {
 			Connection con = openConn();
 			Statement statement = openState(con);
 			
-			// First, I must check if the team that is being edited doesn't conflict with any other teams
+			// First, I must check if the survey that is being edited doesn't conflict with any other surveys
 			int itemInDatabase = itemInDatabase(con, "tblsurvey", "name", newSurveyData.getName());
 			if(itemInDatabase == 0) {
 				
@@ -473,11 +497,11 @@ public class DatabaseConnection {
 					return true;
 
 				} catch(SQLException e){
-					System.out.println("There was an error when trying to edit the team. " + e);
+					System.out.println("There was an error when trying to edit the survey. " + e);
 					return false;
 				}	
-			} else { // A duplicate team was found
-				System.out.println("There is already a teamname in the database that has the edited name w/ primary key = " + Integer.toString(itemInDatabase) + " in tblteams.");
+			} else { // A duplicate survey was found
+				System.out.println("There is already a surveyname in the database that has the edited name w/ primary key = " + Integer.toString(itemInDatabase) + " in tblsurvey.");
 			}
 			
 			closeConn(con);
