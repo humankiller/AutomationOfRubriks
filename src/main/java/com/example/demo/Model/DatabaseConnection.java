@@ -371,9 +371,9 @@ public class DatabaseConnection {
 		String findAllSurveys = "";
 		
 		if(surveytypeid == 0) {
-			findAllSurveys = "SELECT * FROM tblsurvey WHERE active = TRUE";
+			findAllSurveys = "SELECT * FROM tblsurvey WHERE active = FALSE";
 		} else {
-			findAllSurveys = "SELECT * FROM tblsurvey WHERE surveytypeid = " + Integer.toString(surveytypeid) + " AND active = TRUE;";
+			findAllSurveys = "SELECT * FROM tblsurvey WHERE surveytypeid = " + Integer.toString(surveytypeid) + " AND active = FALSE;";
 		}
 		
 		try {
