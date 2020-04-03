@@ -202,7 +202,7 @@ public class HomePage {
 	}
 	
 	@PutMapping("/admin/editsurvey/{surveyNameToEdit}")
-	public ResponseEntity<Boolean> editTeam(@RequestBody Survey newSurveyData, @PathVariable("surveyNameToEdit") String surveyNameToEdit) {
+	public ResponseEntity<Boolean> editSurvey(@RequestBody Survey newSurveyData, @PathVariable("surveyNameToEdit") String surveyNameToEdit) {
 		
 		Boolean editStatus = surveyManageService.editSurveyName(newSurveyData, surveyNameToEdit);
 		

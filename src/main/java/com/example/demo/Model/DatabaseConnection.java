@@ -466,7 +466,7 @@ public class DatabaseConnection {
 				
 				try {
 					
-					String editSurveySQL = "UPDATE tblsurvey SET name = '" + newSurveyData.getName() + "' WHERE name = '" + surveyNameToEdit + "'";
+					String editSurveySQL = "UPDATE tblsurvey SET name = '" + newSurveyData.getName() + "' WHERE name = '" + surveyNameToEdit + "';";
 					statement.executeUpdate(editSurveySQL);
 					System.out.println("Survey " + surveyNameToEdit + " was changed to " + newSurveyData.getName());
 
