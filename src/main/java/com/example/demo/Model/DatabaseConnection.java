@@ -886,7 +886,7 @@ public class DatabaseConnection {
 		
 		int itemPrimaryKey = 0;
 		Statement statement = openState(con);
-		String sql = "SELECT * FROM " + tblName + " WHERE " + collumnName + " = '" + item + "';";
+		String sql = "SELECT * FROM " + tblName + " WHERE " + collumnName + " = '" + item + "' AND active = TRUE;";
 		try {
 			ResultSet results = statement.executeQuery(sql);
 			if(results.next() == true) {
