@@ -216,5 +216,19 @@ public class SurveyService {
 		
 		return completionStatus;
 	}
+	
+	public boolean editSurveyName(Survey newSurveyData, String surveyNameToEdit) {
+		
+		boolean completionStatus = dbconnect.editSurveyName(newSurveyData, surveyNameToEdit);
+		
+		return completionStatus;
+	}
+	
+	public boolean deleteSurveyName(int surveyId) {
+		
+		boolean completionStatus = dbconnect.deleteSurvey(surveyId);
+		
+		return completionStatus;
+	}
 
 }

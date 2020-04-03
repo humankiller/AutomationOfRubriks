@@ -442,6 +442,71 @@ public class DatabaseConnection {
 		return false;
 	}
 	
+	
+	/* **************************************************************************************************************************************************************** */
+	
+	/*
+	* Here I will edit a team that already exists in the database
+	********************************************************************************************************************************************************************
+	*/
+		
+		public boolean editSurveyName(Survey newSurveyData, String surveyNameToEdit) {
+			
+			System.out.println("Survey " + surveyNameToEdit + " will be changed to " + newSurveyData.getName());
+			
+			Connection con = openConn();
+			Statement statement = openState(con);
+			
+			// First, I must check if the team that is being edited doesn't conflict with any other teams
+			int itemInDatabase = itemInDatabase(con, "tblsurvey", "name", newSurveyData.getName());
+			if(itemInDatabase == 0) {
+				
+					
+				System.out.println("Good to edit");
+				
+				try {
+					
+					String editSurveySQL = "UPDATE tblsurvey SET name = '" + newSurveyData.getName() + "' WHERE name = '" + surveyNameToEdit + "'";
+					statement.executeUpdate(editSurveySQL);
+					System.out.println("Survey " + surveyNameToEdit + " was changed to " + newSurveyData.getName());
+
+					return true;
+
+				} catch(SQLException e){
+					System.out.println("There was an error when trying to edit the team. " + e);
+					return false;
+				}	
+			} else { // A duplicate team was found
+				System.out.println("There is already a teamname in the database that has the edited name w/ primary key = " + Integer.toString(itemInDatabase) + " in tblteams.");
+			}
+			
+			closeConn(con);
+			return false;
+		}
+		
+		
+		public boolean deleteSurvey(int surveyid) {
+			
+			boolean deleteSurveyStatus = false;
+			
+			Connection con = openConn();
+			Statement statement = openState(con);
+			
+			String deleteSurveySQL = "UPDATE tblsurvey SET active = 'false' WHERE surveyid = " + Integer.toString(surveyid) + ";";
+			
+			try {
+				statement.executeUpdate(deleteSurveySQL);
+				deleteSurveyStatus = true;
+				
+			} catch(SQLException e) {
+				System.out.println("Could not delete survey " + e.getMessage());
+			} finally {
+				closeConn(con);
+			}
+			
+			return deleteSurveyStatus;
+		}
+	
 	public ReportOptions fetchReportOptions() {
 		
 		ReportOptions returnReportOptions = new ReportOptions();

@@ -201,4 +201,20 @@ public class HomePage {
 		return new ResponseEntity<Boolean>(completionStatus, HttpStatus.OK);
 	}
 	
+	@PutMapping("/admin/editsurvey/{surveyNameToEdit}")
+	public ResponseEntity<Boolean> editTeam(@RequestBody Survey newSurveyData, @PathVariable("surveyNameToEdit") String surveyNameToEdit) {
+		
+		Boolean editStatus = surveyManageService.editSurveyName(newSurveyData, surveyNameToEdit);
+		
+		return new ResponseEntity<Boolean>(editStatus, HttpStatus.OK);
+	}
+	
+	@PutMapping("/admin/deletesurvey/{surveyid}")
+	public ResponseEntity<Boolean> deleteSurvey(@PathVariable("surveyid") int surveyid) {
+		
+		Boolean deleteSurvey = surveyManageService.deleteSurveyName(surveyid);
+		
+		return new ResponseEntity<Boolean>(deleteSurvey, HttpStatus.OK);
+		
+	}
 }
