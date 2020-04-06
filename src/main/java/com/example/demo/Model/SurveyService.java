@@ -237,5 +237,12 @@ public class SurveyService {
 		
 		return completionStatus;
 	}
+	
+	public boolean editQuestion(Question newQuestionData) {
+		
+		boolean completionStatus = dbconnect.editQuestion(newQuestionData);
+		
+		return completionStatus;
+	}
 
 }

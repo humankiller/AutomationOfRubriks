@@ -934,6 +934,41 @@ public class DatabaseConnection {
 	}
 	
 	/**
+	 * This function edits a question that is previously in the database,
+	 * @author Derek
+	 * @param newQuestionData	The updated question text.
+	 * @param questionIDToEdit	The question ID that will be updated.
+	 * @return The completion status of the edit question operation (true if successful; false if unsuccessful).
+	 */
+	public boolean editQuestion(Question newQuestionData) {
+		
+		boolean completionStatus = false;
+		Connection con = openConn();
+		Statement statement = openState(con);
+		
+		/* First, we will check if the question is already in there database so that we can edit it. */
+		int questionIDInDatabase = intInDatabase(con, "tblquestion", "questionid", newQuestionData.getQuestionid());
+		if(questionIDInDatabase == newQuestionData.getQuestionid() && questionIDInDatabase != 0) {
+			
+			System.out.println("Performing update on question with primary key = " + Integer.toString(questionIDInDatabase));
+			try {
+				String editSQL = "UPDATE tblquestion SET question = '" + newQuestionData.getQuestion() + "' WHERE questionid = " + Integer.toString(newQuestionData.getQuestionid()) + ";";
+				statement.executeUpdate(editSQL);
+				completionStatus = true;
+			} catch(SQLException e) {
+				System.out.println("Could not edit question in database with ID: " + Integer.toString(newQuestionData.getQuestionid()) + ". " + e);
+				completionStatus = false;
+			}
+		} else {
+			System.out.println("There is no question in the database with ID: " + Integer.toString(newQuestionData.getQuestionid()) + ". ");
+			completionStatus = false;
+		}
+		
+		closeConn(con);
+		return completionStatus;
+	}
+	
+	/**
 	 * This function adds a question to the database.  Still need to learn checking criteria.
 	 * @author Derek
 	 * @param Question	The question that will be added to the database.
