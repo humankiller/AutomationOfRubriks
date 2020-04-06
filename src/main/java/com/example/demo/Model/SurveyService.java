@@ -196,6 +196,13 @@ public class SurveyService {
 		return activateTemplateStatus;
 	}
 	
+	public ArrayList<Integer> getTemplateInformation(int surveytypeid) {
+		
+		ArrayList<Integer> questionIDs = dbconnect.getTemplateInformation(surveytypeid);
+		
+		return questionIDs;
+	}
+	
 	public boolean insertQuestionType(QuestionType typeOfQuestion) {
 		
 		boolean completionStatus = dbconnect.insertQuestionType(typeOfQuestion);

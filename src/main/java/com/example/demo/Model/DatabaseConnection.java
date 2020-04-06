@@ -874,6 +874,36 @@ public class DatabaseConnection {
 	}
 	
 	/**
+	 * This function gets a survey template's questions in the database.
+	 * @author Derek
+	 * @parameter surveytypeid	The surveytypeid of the survey type that you want to get the questions of.
+	 * @return questionIDs	Returns an ArrayList of questionIDs that are in the survey template.
+	 */
+	public ArrayList<Integer> getTemplateInformation(int surveytypeid) {
+		
+		ArrayList<Integer> questionIDs = new ArrayList<>();
+		
+		Connection con = openConn();
+		
+		String findQuestionsInSurvey = "SELECT * FROM tblquestioninsurvey WHERE surveytypeid = " + Integer.toString(surveytypeid) + ";";
+		Statement statementForQuestionsInSurvey = openState(con);
+		
+		try {
+			
+			ResultSet questionsInSurveyData = statementForQuestionsInSurvey.executeQuery(findQuestionsInSurvey);
+			
+			while(questionsInSurveyData.next()) {
+				questionIDs.add(questionsInSurveyData.getInt("questionid"));
+			}
+		} catch(SQLException e) {
+			System.out.println("There was an error when trying to get the survey templatte information.  " + e);
+		}
+		
+		closeConn(con);
+		return questionIDs;
+	}
+	
+	/**
 	 * This function checks if the given item (String) is in the given table in the database.
 	 * @author Derek
 	 * @param con	The connection of the parent function so that this function can create a statement.

@@ -185,6 +185,14 @@ public class HomePage {
 		
 	}
 	
+	@GetMapping("/admin/gettemplateinformation/surveytypeid={surveytypeid}")
+	public ResponseEntity<ArrayList<Integer>> getTemplateInformation(@PathVariable("surveytypeid") int surveytypeid) {
+		
+		ArrayList<Integer> questionIDs = surveyManageService.getTemplateInformation(surveytypeid);
+		
+		return new ResponseEntity<ArrayList<Integer>>(questionIDs, HttpStatus.OK);
+	}
+	
 	@PostMapping("/admin/insertquestiontype")
 	public ResponseEntity<Boolean> insertQuestionType(@RequestBody QuestionType typeOfQuestion) {
 		
