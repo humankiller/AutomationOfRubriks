@@ -244,5 +244,12 @@ public class SurveyService {
 		
 		return completionStatus;
 	}
+	
+	public SurveyType fetchSurveyType(int surveytypeid) {
+		
+		SurveyType surveyTypeToReturn = dbconnect.fetchSurveyType(surveytypeid);
+		
+		return surveyTypeToReturn;
+	}
 
 }

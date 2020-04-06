@@ -1164,6 +1164,19 @@ public class DatabaseConnection {
 	}
 	
 	/**
+	 * This function gets the survey type using the above function and terminates the connection.
+	 * @author Derek
+	 * @param surveytypeid	The survey type that you want to fetch.
+	 * @return surveyTypeToReturn	Returns the survey type that you want.
+	 */
+	public SurveyType fetchSurveyType(int surveytypeid) {
+		Connection con = openConn();
+		SurveyType surveyTypeToReturn = getTheSurveyType(con, surveytypeid);
+		closeConn(con);
+		return surveyTypeToReturn;
+	}
+	
+	/**
 	 * @author Derek and Octavio
 	 * This function gets the survey and returns it.
 	 * @param con The connection to the database.

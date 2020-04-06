@@ -159,6 +159,14 @@ public class HomePage {
 		return new ResponseEntity<Boolean>(createTemplateStatus, HttpStatus.OK);
 	}
 	
+	@GetMapping("/fetchsurveytype/surveytypeid={surveytypeid}")
+	public ResponseEntity<SurveyType> fetchSurveyType(@PathVariable("surveytypeid") int surveytypeid) {
+		
+		SurveyType surveyTypeToReturn = surveyManageService.fetchSurveyType(surveytypeid);
+		
+		return new ResponseEntity<SurveyType>(surveyTypeToReturn, HttpStatus.OK);
+	}
+	
 	@PutMapping("/admin/deletetemplate/surveytypeid={surveytypeid}")
 	public ResponseEntity<Boolean> deleteTemplate(@PathVariable("surveytypeid") int surveytypeid) {
 		
