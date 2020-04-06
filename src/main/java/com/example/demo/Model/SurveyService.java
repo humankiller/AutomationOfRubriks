@@ -196,11 +196,11 @@ public class SurveyService {
 		return activateTemplateStatus;
 	}
 	
-	public ArrayList<Question> getTemplateInformation(int surveytypeid) {
+	public Template getTemplateInformation(int surveytypeid) {
 		
-		ArrayList<Question> questions = dbconnect.getTemplateInformation(surveytypeid);
+		Template template = dbconnect.getTemplateInformation(surveytypeid);
 		
-		return questions;
+		return template;
 	}
 	
 	public boolean insertQuestionType(QuestionType typeOfQuestion) {

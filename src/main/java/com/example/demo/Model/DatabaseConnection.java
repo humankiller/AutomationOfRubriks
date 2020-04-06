@@ -877,13 +877,18 @@ public class DatabaseConnection {
 	 * This function gets a survey template's questions in the database.
 	 * @author Derek
 	 * @parameter surveytypeid	The surveytypeid of the survey type that you want to get the questions of.
-	 * @return questionIDs	Returns an ArrayList of questionIDs that are in the survey template.
+	 * @return template	Returns the current template information in the database.
 	 */
-	public ArrayList<Question> getTemplateInformation(int surveytypeid) {
+	public Template getTemplateInformation(int surveytypeid) {
 		
+		Template template = new Template();
 		ArrayList<Question> questions = new ArrayList<>();
 		
 		Connection con = openConn();
+		
+		SurveyType typeOfTemplate = getTheSurveyType(con, surveytypeid);
+		
+		template.setTypeOfSurvey(typeOfTemplate);
 		
 		String findQuestionsInSurvey = "SELECT * FROM tblquestioninsurvey WHERE surveytypeid = " + Integer.toString(surveytypeid) + ";";
 		Statement statementForQuestionsInSurvey = openState(con);
@@ -910,12 +915,14 @@ public class DatabaseConnection {
 				
 				questions.add(question);
 			}
+			
+			template.setQuestions(questions);
 		} catch(SQLException e) {
 			System.out.println("There was an error when trying to get the survey templatte information.  " + e);
 		}
 		
 		closeConn(con);
-		return questions;
+		return template;
 	}
 	
 	/**
