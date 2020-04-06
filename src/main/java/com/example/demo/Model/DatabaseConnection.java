@@ -879,9 +879,9 @@ public class DatabaseConnection {
 	 * @parameter surveytypeid	The surveytypeid of the survey type that you want to get the questions of.
 	 * @return questionIDs	Returns an ArrayList of questionIDs that are in the survey template.
 	 */
-	public ArrayList<Integer> getTemplateInformation(int surveytypeid) {
+	public ArrayList<Question> getTemplateInformation(int surveytypeid) {
 		
-		ArrayList<Integer> questionIDs = new ArrayList<>();
+		ArrayList<Question> questions = new ArrayList<>();
 		
 		Connection con = openConn();
 		
@@ -893,14 +893,29 @@ public class DatabaseConnection {
 			ResultSet questionsInSurveyData = statementForQuestionsInSurvey.executeQuery(findQuestionsInSurvey);
 			
 			while(questionsInSurveyData.next()) {
-				questionIDs.add(questionsInSurveyData.getInt("questionid"));
+				Question question = new Question();
+				question.setQuestionid(questionsInSurveyData.getInt("questionid"));
+				
+				String getQuestionInformation = "SELECT * FROM tblquestion WHERE questionid = " + Integer.toString(question.getQuestionid()) + ";";
+				
+				Statement statementForQuestions = openState(con);
+				ResultSet questionsData = statementForQuestions.executeQuery(getQuestionInformation);
+				
+				while(questionsData.next()) {
+					QuestionType typeOfQuestion = new QuestionType();
+					typeOfQuestion.setQuestiontypeid(questionsData.getInt("questiontypeid"));
+					
+					question.setTypeOfQuestion(typeOfQuestion);
+				}
+				
+				questions.add(question);
 			}
 		} catch(SQLException e) {
 			System.out.println("There was an error when trying to get the survey templatte information.  " + e);
 		}
 		
 		closeConn(con);
-		return questionIDs;
+		return questions;
 	}
 	
 	/**
