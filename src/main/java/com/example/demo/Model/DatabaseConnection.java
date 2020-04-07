@@ -926,6 +926,51 @@ public class DatabaseConnection {
 	}
 	
 	/**
+	 * This function will update the the type, description and questions in a survey template.
+	 * @author Derek
+	 * @param updatedTemplate	The survey template that will be updated
+	 * @return completionStatus	The completion status of the insert question operation (true if successful; false if unsuccessful).
+	 */
+	public boolean editTemplate(Template updatedTemplate) {
+		
+		boolean completionStatus = false;
+		
+		Connection con = openConn();
+		Statement statement = openState(con);
+		
+		// First, lets update the type and description of the template
+		String updateTemplateSQL = "UPDATE tblsurveytype SET type = '" + updatedTemplate.getTypeOfSurvey().getType() + "', description = '" + updatedTemplate.getTypeOfSurvey().getDescription() + "' WHERE surveytypeid = " + Integer.toString(updatedTemplate.getTypeOfSurvey().getSurveytypeid()) + ";";
+		
+		try {
+			statement.executeUpdate(updateTemplateSQL);
+			
+			// Now, let's "clean" the previous data out of the tblquestionsinsurvey table.
+			String cleanDataSQL = "DELETE FROM tblquestioninsurvey WHERE surveytypeid = " + Integer.toString(updatedTemplate.getTypeOfSurvey().getSurveytypeid()) + ";";
+			Statement statementForClean = openState(con);
+			
+			statementForClean.executeUpdate(cleanDataSQL);
+			
+			// Now that the data was cleaned out of the tblquestioninsurvey table, we can now add it back in.
+			for(int i = 0; i < updatedTemplate.getQuestions().size(); i++) {
+				
+				int questionIDToLink = updatedTemplate.getQuestions().get(i).getQuestionid();
+				String linkQuestionsToSurveyTypeSQL = "INSERT INTO tblquestioninsurvey (surveytypeid, questionid) VALUES(" + Integer.toString(updatedTemplate.getTypeOfSurvey().getSurveytypeid()) + " , " + Integer.toString(questionIDToLink) + ");";
+				Statement linkStatement = openState(con);
+				linkStatement.executeUpdate(linkQuestionsToSurveyTypeSQL);
+			}
+			
+			completionStatus = true;
+			
+		} catch(SQLException e) {
+			System.out.println("Could not delete template " + e.getMessage());
+		}
+		
+		closeConn(con);
+		return completionStatus;
+		
+	}
+	
+	/**
 	 * This function checks if the given item (String) is in the given table in the database.
 	 * @author Derek
 	 * @param con	The connection of the parent function so that this function can create a statement.

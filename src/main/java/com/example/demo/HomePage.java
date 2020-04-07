@@ -193,6 +193,14 @@ public class HomePage {
 		return new ResponseEntity<Template>(template, HttpStatus.OK);
 	}
 	
+	@PutMapping("/admin/edittemplate")
+	public ResponseEntity<Boolean> editTemplate(@RequestBody Template updatedTemplate) {
+		
+		Boolean completionStatus = surveyManageService.editTemplate(updatedTemplate);
+				
+		return new ResponseEntity<Boolean>(completionStatus, HttpStatus.OK);
+	}
+	
 	@PostMapping("/admin/insertquestiontype")
 	public ResponseEntity<Boolean> insertQuestionType(@RequestBody QuestionType typeOfQuestion) {
 		

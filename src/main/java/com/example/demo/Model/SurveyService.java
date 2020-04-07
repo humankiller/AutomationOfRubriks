@@ -203,6 +203,13 @@ public class SurveyService {
 		return template;
 	}
 	
+	public boolean editTemplate(Template updatedTemplate) {
+		
+		boolean completionStatus = dbconnect.editTemplate(updatedTemplate);
+		
+		return completionStatus;
+	}
+	
 	public boolean insertQuestionType(QuestionType typeOfQuestion) {
 		
 		boolean completionStatus = dbconnect.insertQuestionType(typeOfQuestion);
