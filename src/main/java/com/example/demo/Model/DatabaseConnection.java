@@ -1337,6 +1337,7 @@ public class DatabaseConnection {
 			while(typeData.next()) { 
 				
 				QuestionType newQuestionType = new QuestionType();
+				newQuestionType.setQuestiontypeid(typeData.getInt("questiontypeid"));
 				newQuestionType.setType(typeData.getString("type"));
 				newQuestionType.setNumberOfOptions(typeData.getInt("numberofoptions"));
 				newQuestionType.setDescription(typeData.getString("description"));
