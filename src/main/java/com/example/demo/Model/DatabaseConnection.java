@@ -906,14 +906,7 @@ public class DatabaseConnection {
 				Statement statementForQuestions = openState(con);
 				ResultSet questionsData = statementForQuestions.executeQuery(getQuestionInformation);
 				
-				while(questionsData.next()) {
-					QuestionType typeOfQuestion = new QuestionType();
-					typeOfQuestion.setQuestiontypeid(questionsData.getInt("questiontypeid"));
-					
-					question.setTypeOfQuestion(typeOfQuestion);
-				}
-				
-				questions.add(question);
+				getQuestion(questionsData, questions, con);
 			}
 			
 			template.setQuestions(questions);
