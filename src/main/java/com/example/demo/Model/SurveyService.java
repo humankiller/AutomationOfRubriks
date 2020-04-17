@@ -150,6 +150,13 @@ public class SurveyService {
 		return report;
 		
 	}
+	
+	public ArrayList<SurveyQuestions> fetchReportWithTime(int surveyid, String time1, String time2) {
+		
+		ArrayList<SurveyQuestions> report = dbconnect.fetchReportWithTime(surveyid, time1, time2);
+		
+		return report;
+	}
 
 	public boolean verifyAdminLogin(String userName, String password) {
 		

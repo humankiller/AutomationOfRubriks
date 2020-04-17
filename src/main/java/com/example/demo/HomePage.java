@@ -135,6 +135,17 @@ public class HomePage {
 		
 	}
 	
+	@GetMapping("/admin/report/time1={time1}/time2={time2}/surveyid={surveyid}")
+	public ResponseEntity<ArrayList<SurveyQuestions>> fetchReport(@PathVariable("time1") String time1, @PathVariable("time2") String time2, @PathVariable("surveyid") int surveyid) {
+		
+		ArrayList<SurveyQuestions> report = new ArrayList<>();
+		
+		report = surveyManageService.fetchReportWithTime(surveyid, time1, time2);
+		
+		return new ResponseEntity<ArrayList<SurveyQuestions>>(report, HttpStatus.OK);
+		
+	}
+	
 	@GetMapping("/admin/createtemplate/getquestiontypes")
 	public ArrayList<QuestionType> getQuestionTypes() {
 		

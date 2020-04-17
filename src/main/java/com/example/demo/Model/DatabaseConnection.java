@@ -657,6 +657,91 @@ public class DatabaseConnection {
 		
 		return report;
 	}
+	
+public ArrayList<SurveyQuestions> fetchReportWithTime(int surveyid, String time1, String time2) {
+		
+		ArrayList<SurveyQuestions> report = new ArrayList<>();
+		
+		Connection con = openConn();
+		Statement statement = openState(con);
+		
+		// First, let's get the TakenSurvey information
+		String queryTakenSurveyInformation = "SELECT * FROM tbltakensurvey WHERE timestamp between '" + time1 + "' AND '" + time2 + "' AND surveyid = " + Integer.toString(surveyid) + ";";
+		
+		try {
+			
+			ResultSet takenSurveyInformation = statement.executeQuery(queryTakenSurveyInformation);
+			
+			while(takenSurveyInformation.next()) {
+				SurveyQuestions takenSurvey = new SurveyQuestions();
+				takenSurvey.setSurvey(null); // Don't need it in the frontend
+				
+				// Get the takensurveyid to be able to fetch the correct answers
+				int takensurveyid = takenSurveyInformation.getInt("takensurveyid");
+				double totalScore = takenSurveyInformation.getDouble("score");
+				
+				// Create answers array to hold answers in this TakenSurvey
+				ArrayList<Question> answers = new ArrayList<>();
+				
+				// Must create a new statement to query answers
+				Statement statementToFetchAnswers = con.createStatement();
+				String queryAnswersInformation = "SELECT * FROM tblanswer WHERE takensurveyid = " + Integer.toString(takensurveyid) + ";";
+				ResultSet answersInformation = statementToFetchAnswers.executeQuery(queryAnswersInformation);
+				
+				while(answersInformation.next()) {
+					Question newAnswer = new Question();
+					int answer = answersInformation.getInt("answer");
+					
+					// Get the questionid to be able to fetch the correct question
+					int questionid = answersInformation.getInt("questionid");
+					
+					String getQuestionInformation = "SELECT * FROM tblquestion WHERE questionid = " + Integer.toString(questionid) + ";";
+					
+					Statement statementForQuestions = openState(con);
+					
+					ResultSet questionsData = statementForQuestions.executeQuery(getQuestionInformation);
+					
+					//getQuestion(questionsData, answers, con);
+					
+					while(questionsData.next()) {
+						
+						newAnswer.setQuestionScore(answer);
+						newAnswer.setQuestion(questionsData.getString("question"));
+						newAnswer.setQuestionid(questionsData.getInt("questionid"));
+						
+						int questionTypeId = questionsData.getInt("questiontypeid");
+						String getQuestionTypeInformation = "SELECT * FROM tblquestiontype WHERE questiontypeid = " + Integer.toString(questionTypeId) + ";";
+						
+						Statement statementForQuestionTypes = openState(con);
+						ResultSet questionTypesData = statementForQuestionTypes.executeQuery(getQuestionTypeInformation);
+						
+						while(questionTypesData.next()) {
+							
+							QuestionType newQuestionType = new QuestionType();
+							
+							newQuestionType.setType(questionTypesData.getString("type"));
+							newQuestionType.setNumberOfOptions(questionTypesData.getInt("numberofoptions"));
+							newQuestionType.setDescription(questionTypesData.getString("description"));
+							newAnswer.setTypeOfQuestion(newQuestionType);
+						}
+					}
+					
+					
+					answers.add(newAnswer);
+					
+				}
+				takenSurvey.setQuestions(answers);
+				takenSurvey.setTotalScore(totalScore);
+				report.add(takenSurvey);
+			}
+		} catch(SQLException e) {
+			System.out.println("Could not fetch the report.  " + e);
+		}  finally {
+			closeConn(con);
+		}
+		
+		return report;
+	}
 
 	
 	public boolean verifyAdmin(String uName, String pWord) {
@@ -1300,7 +1385,6 @@ public class DatabaseConnection {
 		return theSurvey;
 		
 	}
-	
 	
 	
 	//*********************
