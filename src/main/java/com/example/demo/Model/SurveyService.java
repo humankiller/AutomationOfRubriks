@@ -272,5 +272,9 @@ public class SurveyService {
 		
 		return surveyTypeToReturn;
 	}
-
+	
+	public float getQuestionFromResult(int questionId){
+		float average = dbconnect.getQuestionFromResult(questionId);
+		return average;
+	}
 }

@@ -1386,6 +1386,28 @@ public ArrayList<SurveyQuestions> fetchReportWithTime(int surveyid, String time1
 		
 	}
 	
+	public float getQuestionFromResult(int questionId){
+		ArrayList<SurveyQuestions> report = new ArrayList<>();
+		float average = 0;
+		int count = 0;
+		
+		Connection con = openConn();
+		Statement statement = openState(con);
+		try {
+				String queryAnswersInformation = "SELECT answer FROM tblanswer WHERE questionid = " + questionId + ";";
+				ResultSet answersInformation = statement.executeQuery(queryAnswersInformation);
+				while(answersInformation.next()) {
+					average =+ answersInformation.getInt("answer");
+					count++;
+				}
+		} catch(SQLException e) {
+			System.out.println("Could not fetch the report.  " + e);
+		}  finally {
+			closeConn(con);
+		}
+		average = average/count;
+		return average;
+	}
 	
 	//*********************
 	//***NATHAN'S CHANGE***

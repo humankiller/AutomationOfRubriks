@@ -268,4 +268,12 @@ public class HomePage {
 		
 		return new ResponseEntity<Boolean>(completionStatus, HttpStatus.OK);
 	}
+	
+	@GetMapping("/admin/report/questionid={questionid}")
+	public ResponseEntity<Float> insertSurvey(@PathVariable("questionid") int questionid) {
+		
+		Float average = surveyManageService.getQuestionFromResult(questionid);
+		
+		return new ResponseEntity<Float>(average, HttpStatus.OK);
+	}
 }
