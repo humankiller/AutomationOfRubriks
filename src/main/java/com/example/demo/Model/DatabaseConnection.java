@@ -1397,7 +1397,7 @@ public ArrayList<SurveyQuestions> fetchReportWithTime(int surveyid, String time1
 				String queryAnswersInformation = "SELECT answer FROM tblanswer WHERE questionid = " + questionId + ";";
 				ResultSet answersInformation = statement.executeQuery(queryAnswersInformation);
 				while(answersInformation.next()) {
-					average =+ answersInformation.getInt("answer");
+					average += answersInformation.getInt("answer");
 					count++;
 				}
 		} catch(SQLException e) {
