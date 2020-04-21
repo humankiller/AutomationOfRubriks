@@ -162,6 +162,14 @@ public class HomePage {
 		return questions;
 	}
 	
+	@GetMapping("/admin/createtemplate/getquestions/questiontypeid={questiontypeid}/keyword={keyword}")
+	public ArrayList<Question> getQuestionsWithQuestionTypeIDAndKeyword(@PathVariable("questiontypeid") int questiontypeid, @PathVariable("keyword") String keyword) {
+		
+		ArrayList<Question> questions = surveyManageService.getQuestionsWithQuestionTypeIDAndKeyword(questiontypeid, keyword);
+		
+		return questions;
+	}
+	
 	@PostMapping("/admin/createtemplate")
 	public ResponseEntity<Boolean> createTemplate(@RequestBody Template template) {
 		

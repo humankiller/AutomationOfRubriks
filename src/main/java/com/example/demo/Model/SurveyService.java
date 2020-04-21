@@ -182,6 +182,13 @@ public class SurveyService {
 		return questions;
 	}
 	
+	public ArrayList<Question> getQuestionsWithQuestionTypeIDAndKeyword(int questiontypeid, String keyword) {
+		
+		ArrayList<Question> questions = dbconnect.getQuestionsWithTypeQuestionIDAndKeyword(questiontypeid, keyword);
+		
+		return questions;
+	}
+	
 	public boolean createTemplate(Template template) {
 		
 		boolean createTemplateStatus = dbconnect.createTemplate(template);

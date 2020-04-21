@@ -860,6 +860,54 @@ public ArrayList<SurveyQuestions> fetchReportWithTime(int surveyid, String time1
 		return questions;
 	}
 	
+	public ArrayList<Question> getQuestionsWithTypeQuestionIDAndKeyword(int questiontypeid, String keyword) {
+		
+		ArrayList<Question> questions = new ArrayList<>();
+		
+		QuestionType selectedQuestionType = new QuestionType();
+		
+		Connection con = openConn();
+		Statement statement = openState(con);
+		
+		String fetchQuestionTypeData = "SELECT * FROM tblquestiontype WHERE questiontypeid = " + Integer.toString(questiontypeid) + ";";
+		
+		try {
+			
+			ResultSet questionTypesData = statement.executeQuery(fetchQuestionTypeData);
+			
+			while(questionTypesData.next()) {
+				
+				selectedQuestionType.setQuestiontypeid(questionTypesData.getInt("questiontypeid"));
+				selectedQuestionType.setType(questionTypesData.getString("type"));
+				selectedQuestionType.setNumberOfOptions(questionTypesData.getInt("numberofoptions"));
+				selectedQuestionType.setDescription(questionTypesData.getString("description"));
+			}
+			
+			// Now get all of the questions with that specific question type from the database
+			String fetchQuestionsWithMatchingQuestionID = "SELECT * FROM tblquestion WHERE questiontypeid = " + Integer.toString(questiontypeid) + " AND question LIKE '%" + keyword + "%';";
+			Statement questionsStatement = openState(con);
+			ResultSet questionsData = questionsStatement.executeQuery(fetchQuestionsWithMatchingQuestionID);
+			
+			while(questionsData.next()) {
+				
+				Question newQuestion = new Question();
+				
+				newQuestion.setTypeOfQuestion(selectedQuestionType);
+				newQuestion.setQuestionid(questionsData.getInt("questionid"));
+				newQuestion.setQuestion(questionsData.getString("question"));
+				newQuestion.setQuestionScore(-1);
+				questions.add(newQuestion);
+				
+			}
+		} catch(SQLException e) {
+			System.out.println("Could not retrieve questions from the database " + e.getMessage());
+		} finally {
+			closeConn(con);
+		}
+		
+		return questions;
+	}
+	
 	public boolean createTemplate(Template template) {
 		
 		boolean createTemplateStatus = false;
