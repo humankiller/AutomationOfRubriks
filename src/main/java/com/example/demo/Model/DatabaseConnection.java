@@ -556,7 +556,7 @@ public class DatabaseConnection {
 			
 			Statement statementForSurveys = openState(con);
 			
-			ResultSet surveysData = statement.executeQuery("SELECT * FROM tblsurvey");
+			ResultSet surveysData = statement.executeQuery("SELECT * FROM tblsurvey WHERE active = TRUE;");
 			
 			while(surveysData.next()) {
 				
