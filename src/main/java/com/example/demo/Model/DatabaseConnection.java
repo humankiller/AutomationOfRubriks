@@ -921,7 +921,7 @@ public ArrayList<SurveyQuestions> fetchReportWithTime(int surveyid, String time1
 		Connection con = openConn();
 		Statement statement = openState(con);
 		
-		String checkDuplicateSQL = "SELECT * FROM tblsurveytype WHERE type = '" + template.getTypeOfSurvey().getType() + "';";
+		String checkDuplicateSQL = "SELECT * FROM tblsurveytype WHERE type = '" + template.getTypeOfSurvey().getType() + "' AND active = TRUE;";
 		
 		try {
 			
