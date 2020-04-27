@@ -189,9 +189,9 @@ public class SurveyService {
 		return questions;
 	}
 	
-	public boolean createTemplate(Template template) {
+	public int createTemplate(Template template) {
 		
-		boolean createTemplateStatus = dbconnect.createTemplate(template);
+		int createTemplateStatus = dbconnect.createTemplate(template);
 		
 		return createTemplateStatus;
 	}

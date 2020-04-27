@@ -171,11 +171,11 @@ public class HomePage {
 	}
 	
 	@PostMapping("/admin/createtemplate")
-	public ResponseEntity<Boolean> createTemplate(@RequestBody Template template) {
+	public ResponseEntity<Integer> createTemplate(@RequestBody Template template) {
 		
-		Boolean createTemplateStatus = surveyManageService.createTemplate(template);
+		Integer createTemplateStatus = surveyManageService.createTemplate(template);
 		
-		return new ResponseEntity<Boolean>(createTemplateStatus, HttpStatus.OK);
+		return new ResponseEntity<Integer>(createTemplateStatus, HttpStatus.OK);
 	}
 	
 	@GetMapping("/fetchsurveytype/surveytypeid={surveytypeid}")

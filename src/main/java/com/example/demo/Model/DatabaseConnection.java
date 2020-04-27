@@ -908,9 +908,12 @@ public ArrayList<SurveyQuestions> fetchReportWithTime(int surveyid, String time1
 		return questions;
 	}
 	
-	public boolean createTemplate(Template template) {
+	public int createTemplate(Template template) {
 		
-		boolean createTemplateStatus = false;
+		// If createTemplateStatus = 0 at the end, we know there was some kind of error.
+		// Otherwise, it will return the surveytypeid
+		int createTemplateStatus = 0;
+		int surveytypeid = 0;
 		
 		String type = template.getTypeOfSurvey().getType();
 		String description = template.getTypeOfSurvey().getDescription();
@@ -941,7 +944,7 @@ public ArrayList<SurveyQuestions> fetchReportWithTime(int surveyid, String time1
 				
 				while(findSurveyTypeIDData.next()) {
 					
-					int surveytypeid = findSurveyTypeIDData.getInt("surveytypeid");
+					surveytypeid = findSurveyTypeIDData.getInt("surveytypeid");
 					Statement linkStatement = openState(con);
 					
 					for(int i = 0; i < template.getQuestions().size(); i++) {
@@ -951,7 +954,7 @@ public ArrayList<SurveyQuestions> fetchReportWithTime(int surveyid, String time1
 						linkStatement.executeUpdate(linkQuestionsToSurveyTypeSQL);
 					}	
 				}
-				createTemplateStatus = true;
+				createTemplateStatus = surveytypeid;
 			}
 		} catch(SQLException e) {
 			System.out.println("Could not insert template into database " + e.getMessage());
