@@ -975,7 +975,25 @@ public ArrayList<SurveyQuestions> fetchReportWithTime(int surveyid, String time1
 		String deleteTemplateSQL = "UPDATE tblsurveytype SET active = 'false' WHERE surveytypeid = " + Integer.toString(surveytypeid) + ";";
 		
 		try {
+			
 			statement.executeUpdate(deleteTemplateSQL);
+			
+			// Next, we need to deactivate all of the surveys of that survey type
+			Statement statementToDeleteSurveys = openState(con);
+			String findSurveysToDelete = "SELECT * FROM tblsurvey WHERE surveytypeid = " + Integer.toString(surveytypeid) + ";";
+			
+			ResultSet surveysToDelete = statementToDeleteSurveys.executeQuery(findSurveysToDelete);
+			
+			while(surveysToDelete.next()) {
+				
+				int surveyid = surveysToDelete.getInt("surveyid");
+				
+				String deleteSurveySQL = "UPDATE tblsurvey SET active = 'false' WHERE surveyid = " + Integer.toString(surveyid) + ";";
+				Statement deleteSurvey = openState(con);
+				deleteSurvey.executeUpdate(deleteSurveySQL);
+				
+			}
+			
 			deleteTemplateStatus = true;
 			
 		} catch(SQLException e) {
