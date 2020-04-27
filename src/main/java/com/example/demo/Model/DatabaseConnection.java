@@ -884,7 +884,7 @@ public ArrayList<SurveyQuestions> fetchReportWithTime(int surveyid, String time1
 			}
 			
 			// Now get all of the questions with that specific question type from the database
-			String fetchQuestionsWithMatchingQuestionID = "SELECT * FROM tblquestion WHERE questiontypeid = " + Integer.toString(questiontypeid) + " AND question ILIKE '%" + keyword + "%';";
+			String fetchQuestionsWithMatchingQuestionID = "SELECT * FROM tblquestion WHERE questiontypeid = " + Integer.toString(questiontypeid) + " AND question ILIKE '%" + keyword + "%' AND active = TRUE;";
 			Statement questionsStatement = openState(con);
 			ResultSet questionsData = questionsStatement.executeQuery(fetchQuestionsWithMatchingQuestionID);
 			
